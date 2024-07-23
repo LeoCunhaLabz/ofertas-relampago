@@ -31,6 +31,7 @@ export default function Ofertas(){
       setCategories(response.data);
     }
 
+    
     useEffect(() => {
         if (emailUser && latitude && longitude) {
             makeRequest.post("post/getposthomepage", { email: emailUser, latitude: latitude, longitude: longitude }).then((res) => {

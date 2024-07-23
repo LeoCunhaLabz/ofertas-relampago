@@ -224,9 +224,9 @@ export const createPost = async (req, res) => {
 
     export const getAllClients = (req, res) => {
         const { email } = req.body;
-        if (email !== "teste_empresa@gmail.com") {
+        if (email !== process.env.EMAIL_ADMIN) {
             return res.status(400).json({ message: "Usuário não autorizado." });
-        } else if (email === "teste_empresa@gmail.com") {
+        } else if (email === process.env.EMAIL_ADMIN) {
             db.query(
                 "SELECT * FROM clientes",
                 (error, data) => {
@@ -243,9 +243,9 @@ export const createPost = async (req, res) => {
 
     export const getAllAnunciantes = (req, res) => {
         const { email } = req.body;
-        if (email !== "teste_empresa@gmail.com") {
+        if (email !== process.env.EMAIL_ADMIN) {
             return res.status(400).json({ message: "Usuário não autorizado." });
-        } else if (email === "teste_empresa@gmail.com") {
+        } else if (email === process.env.EMAIL_ADMIN) {
             db.query(
                 "SELECT * FROM anunciantes",
                 (error, data) => {
@@ -262,9 +262,9 @@ export const createPost = async (req, res) => {
 
     export const getOneAnunciante = (req, res) => {
         const { email, id } = req.body;
-        if (email !== "teste_empresa@gmail.com") {
+        if (email !== process.env.EMAIL_ADMIN) {
             return res.status(400).json({ message: "Usuário não autorizado." });
-        } else if (email === "teste_empresa@gmail.com") {
+        } else if (email === process.env.EMAIL_ADMIN) {
             db.query(
                 "SELECT * FROM anunciantes WHERE id = ?", [id],
                 (error, data) => {
@@ -283,7 +283,7 @@ export const createPost = async (req, res) => {
         const {email, id_anunciante, user_type} = req.body;
         if (user_type !== "anunciante") {
             return res.status(400).json({ message: "Usertype não está correto" });
-        } else if (email !== "teste_empresa@gmail.com") {
+        } else if (email !== process.env.EMAIL_ADMIN) {
             return res.status(400).json({ message: "Usuário não autorizado." });
         }
         db.query(
@@ -303,7 +303,7 @@ export const createPost = async (req, res) => {
         const { email, habilitado, user_type, id } = req.body;
         if (user_type !== "anunciante") {
             return res.status(400).json({ message: "Usertype não está correto" });
-        } else if (email !== "teste_empresa@gmail.com") {
+        } else if (email !== process.env.EMAIL_ADMIN) {
             return res.status(400).json({ message: "Usuário não autorizado." });
         }
         db.query(
