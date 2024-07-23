@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useState } from 'react'
-import { makeRequest } from '../../../../axios'
+import { makeRequest } from '@/../../axios';
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { UserContext } from '@/context/UserContext'

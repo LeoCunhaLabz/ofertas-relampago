@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert } from '@/components/ui/alert'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { makeRequest } from '../../../axios'
+import { makeRequest } from '@/../../axios';
 import { UserContext } from '@/context/UserContext'
 import { Success } from '@/components/ui/success'
 import { Title } from '@/components/Title'

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { makeRequest } from '../../../axios';
+import { makeRequest } from '@/../../axios';
 
 export default function Layout({
     children,

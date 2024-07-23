@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Success } from '@/components/ui/success'
-import { makeRequest } from '../../../../axios'
+import { makeRequest } from '@/../../axios';
 import { AddressAutocomplete } from '@/components/AddressAutoComplete'
 
 export const Form = () => {

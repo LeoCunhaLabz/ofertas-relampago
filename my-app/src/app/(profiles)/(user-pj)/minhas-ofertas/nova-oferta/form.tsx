@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useState } from 'react'
 import { Success } from '@/components/ui/success'
-import { makeRequest } from '../../../../../../axios'
+import { makeRequest } from '@/../../axios';
 import { useContext } from 'react'
 import { UserContext } from '@/context/UserContext'
 
