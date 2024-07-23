@@ -60,6 +60,13 @@ export type NovoAnunciante = {
     marca_produto: string;
     distance: number;
     nome_produto: string;
+    location: string;
+    id_anuncio: string;
+    id_anunciante: string;
+    preco_original: string; 
+    preco_oferta: string;
+    imagem_url: string; 
+    data_fim_oferta: string;
 };
 
 export type UniqueEventModel = {
@@ -80,6 +87,6 @@ export type UniqueEventModel = {
     nome_comercial: string;
     cnpj: string;
     imagem_url_anunciante: string;
-    latitude; string;
+    latitude: string;
     longitude: string;
 };

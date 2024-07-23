@@ -4,11 +4,11 @@ import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Success } from '@/components/ui/success'
 import { makeRequest } from '@/../../axios'
 import { AddressAutocomplete } from '@/components/AddressAutoComplete'
+import { useRouter } from 'next/router'
 
 export const Form = () => {
   const [userType, setUserType] = useState('anunciante')
@@ -157,7 +157,7 @@ export const Form = () => {
           </div>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="storeAddress">Endereço da Loja</Label>
-            <AddressAutocomplete onSelectAddress={handleSelectAddress} />
+            <AddressAutocomplete value={formData.endereco} onSelectAddress={handleSelectAddress} />
           </div>
         </>
       )}

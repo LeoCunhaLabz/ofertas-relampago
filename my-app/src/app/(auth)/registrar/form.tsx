@@ -162,7 +162,7 @@ export const Form = () => {
           </div>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="storeAddress">Endereço</Label>
-            <AddressAutocomplete onSelectAddress={handleSelectAddress} />
+            <AddressAutocomplete value={formData.endereco} onSelectAddress={handleSelectAddress} />
           </div>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="password">Senha</Label>

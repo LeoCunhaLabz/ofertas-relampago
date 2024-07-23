@@ -1,6 +1,14 @@
 import React from "react";
 
-export const Package = ({ title, price, description, features, bgColor, hoverColor, index }) => (
+export const Package = ({ title, price, description, features, bgColor, hoverColor, index }: {
+  title: string,
+  price: string,
+  description: string,
+  features: string[],
+  bgColor: string,
+  hoverColor: string,
+  index: number
+}) => (
   <div className={`flex-1 text-xl mt-14 rounded-xl border ${bgColor} p-10 w-full`}>
     <div className={`${bgColor}`}>{title}</div>
     <div className="text-6xl my-5 font-light">{price}</div>

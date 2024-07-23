@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Script from 'next/script';
+import { Autocomplete } from 'googlemaps';
 
-export const AddressAutocomplete = ({ onSelectAddress, value }) => {
+export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddress: any, value: any }) => {
   const [address, setAddress] = useState(value || '');
-  const autocompleteRef = useRef(null);
+  const autocompleteRef = useRef<Autocomplete | null>(null);
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -16,7 +17,8 @@ export const AddressAutocomplete = ({ onSelectAddress, value }) => {
   }, [value]);
 
   const initAutocomplete = () => {
-    const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
+    const inputElement = inputRef.current as unknown as HTMLInputElement;
+    const autocomplete = new window.google.maps.places.Autocomplete(inputElement, {
       types: ['geocode'], // Restringe a busca a endereços
       componentRestrictions: { country: 'br' } // Restringe a busca ao Brasil
     });
@@ -29,8 +31,8 @@ export const AddressAutocomplete = ({ onSelectAddress, value }) => {
         return;
       }
       const address = place.formatted_address;
-      const lat = place.geometry.location.lat();
-      const lng = place.geometry.location.lng();
+      const lat = place.geometry.location?.lat();
+      const lng = place.geometry.location?.lng();
       setAddress(address);
       onSelectAddress({ address, lat, lng });
     });

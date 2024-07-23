@@ -155,8 +155,8 @@ const Settings = () => {
       setSuccess(response.data.message || 'Informações atualizadas com sucesso!');
     } catch (err) {
       // Trata erros de resposta do servidor
-      if (err.response) {
-        setError(err.response.data.message || 'Ocorreu um erro desconhecido!');
+      if ((err as any).response) {
+        setError((err as any).response.data.message || 'Ocorreu um erro desconhecido!');
       } else {
         console.log(err);
         setError('Ocorreu um erro ao tentar atualizar as informações!');

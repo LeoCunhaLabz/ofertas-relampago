@@ -17,7 +17,7 @@ export function Header() {
     let isMounted = true; // Adiciona uma flag para verificar se o componente está montado
     if (isMounted) { // Verifica se o componente ainda está montado antes de fazer a chamada API
       makeRequest.get("post/getpost").then((res) => {
-        const ids = res.data.data.map(item => item.id_anuncio);
+        const ids = res.data.data.map((item: { id_anuncio: string }) => item.id_anuncio);
         setIds(ids);
         if (ids.length > 0) {
           setRandomId(ids[Math.floor(Math.random() * ids.length)]);

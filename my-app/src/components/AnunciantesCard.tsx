@@ -1,5 +1,6 @@
-import { NovoAnunciante } from "@/models";
+import { NovoAnunciante } from "../models";
 import Link from "next/link";
+import React from "react";
 
 export type AnuncianteCardProps = {
     event: NovoAnunciante;
