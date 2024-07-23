@@ -29,7 +29,10 @@ export const Form = () => {
   })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const handleSelectAddress = (addressData) => {
+  interface AddressData {
+    address: string
+  }
+  const handleSelectAddress = (addressData:AddressData) => {
   setFormData((prevData) => ({ ...prevData, endereco: addressData.address }))
 };
 
