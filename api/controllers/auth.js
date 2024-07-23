@@ -2,8 +2,21 @@ import { db } from "../connect.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import axios from 'axios';
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 let user_type = "anunciante";
+
+const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,  
+    port:process.env.EMAIL_PORT,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    }
+})
 
 async function geocodeAddress(address) {
     const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
@@ -75,6 +88,27 @@ export const register = (req, res) => {
                             console.log(error);
                             return res.status(500).json({ message: "Erro ao registrar o usuário." });
                         } else {
+                            transporter.sendMail({
+                                from: 'Ofertas Relâmpago <naoresponda@ofertasrelampago.com>',
+                                to:'leonardovalcesio@gmail.com',
+                                subject:'Ofertas Relâmpago - Novo Anunciante cadastrado',
+                                text: `Um novo ANUNCIANTE foi cadastrado com as seguintes informações:\nNome Comercial: ${nome_comercial}\nCNPJ: ${cnpj}\nRazão Social: ${razao_social}\nE-mail: ${email}\nEndereço: ${endereco}`, // Corpo do e-mail em texto plano
+                                html: `<p>Um novo ANUNCIANTE foi cadastrado com as seguintes informações:</p>
+                                       <ul>
+                                         <li>Nome Comercial: ${nome_comercial}</li>
+                                         <li>CNPJ: ${cnpj}</li>
+                                         <li>Razão Social: ${razao_social}</li>
+                                         <li>E-mail: ${email}</li>
+                                         <li>Endereço: ${endereco}</li>
+                                       </ul>
+                                       <p>Acesse o Painel de Administrador para Aprovar o usuário</p>` // Corpo do e-mail em HTML
+                            }, (error, info) => {
+                                if (error) {
+                                    console.log(error);
+                                } else {
+                                    console.log("Email enviado: " + info.response);
+                                }
+                            });
                             return res.status(201).json({ message: "Usuário registrado com sucesso." });
                         }
                     });
@@ -138,6 +172,28 @@ export const register = (req, res) => {
                             console.log(error);
                             return res.status(500).json({ message: "Erro ao registrar o usuário." });
                         } else {
+                            transporter.sendMail({
+                                from: 'Ofertas Relâmpago <naoresponda@ofertasrelampago.com>',
+                                to:'leonardovalcesio@gmail.com',
+                                subject:'Ofertas Relâmpago - Novo Usuário cadastrado',
+                                text: `Um novo USUÁRIO foi cadastrado com as seguintes informações:\nNome Comercial: ${nome_comercial}\nCNPJ: ${cnpj}\nRazão Social: ${razao_social}\nE-mail: ${email}\nEndereço: ${endereco}`, // Corpo do e-mail em texto plano
+                                html: `<p>Um novo USUÁRIO foi cadastrado com as seguintes informações:</p>
+                                       <ul>
+                                         <li>Nome Completo: ${nome_completo}</li>
+                                         <li>CPF: ${cpf}</li>
+                                         <li>Data de Nascimento: ${nascimento}</li>
+                                         <li>Gênero: ${genero}</li>
+                                         <li>Celular: ${celular}</li>
+                                         <li>Endereço: ${endereco}</li>
+                                         <li>E-mail: ${email}</li>
+                                       </ul>` // Corpo do e-mail em HTML
+                            }, (error, info) => {
+                                if (error) {
+                                    console.log(error);
+                                } else {
+                                    console.log("Email enviado: " + info.response);
+                                }
+                            });
                             return res.status(201).json({ message: "Usuário registrado com sucesso." });
                         }
                     });
@@ -170,6 +226,10 @@ export const login = (req, res) => {
                     return res.status(404).json({ message: "Usuário não encontrado." });
                 } else {
                     const user = data[0];
+
+                    if (user.habilitado === 0) {
+                        return res.status(403).json({ message: "Usuário ainda não está habilitado." });
+                    }
 
                     const checkPassword = await bcrypt.compare(password, user.password);
 
@@ -278,6 +338,19 @@ export const esqueciSenha = (req, res) => {
                 if (data.length === 0) {
                     return res.status(404).json({ message: "Usuário não encontrado." });
                 } else {
+                    const user = data[0];
+                    const resetToken = jwt.sign(
+                        {id: user.id, email: user.email },
+                        process.env.TOKEN,
+                        { expiresIn: "1h" }
+                    );
+                    transporter.sendMail({
+                        from: 'Ofertas Relâmpago <naoresponda@ofertasrelampago.com',
+                        to: email,
+                        subject: 'Redefinição de Senha',
+                        text: `Você solicitou a redefinição de senha. Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo: http://ofertasrelampago.com/redefinir-senha/${resetToken}`,
+                        html: `<p>Você solicitou a redefinição de senha.</p><p>Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo:</p><a href="http://ofertas.com/redefinir-senha/${resetToken}">Redefinir Senha</a>`
+                    });
                     return res.status(200).json({ message: "Email de recuperação enviado com sucesso!" });
                 }
             }

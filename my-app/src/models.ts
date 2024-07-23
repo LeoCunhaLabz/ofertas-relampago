@@ -58,6 +58,8 @@ export type NovoAnunciante = {
     categoria_produto: string;
     descricao_oferta: string;
     marca_produto: string;
+    distance: number;
+    nome_produto: string;
 };
 
 export type UniqueEventModel = {

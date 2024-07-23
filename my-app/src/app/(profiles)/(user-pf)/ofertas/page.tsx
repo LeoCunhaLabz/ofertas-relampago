@@ -12,25 +12,34 @@ import Image from 'next/image';
 
 export default function Ofertas(){
     const [events, setEvents] = useState<NovoAnunciante[]|undefined>(undefined);
-    const [filteredEvents, setFilteredEvents] = useState([]);
+    const [filteredEvents, setFilteredEvents] = useState<NovoAnunciante[]>([]);
     const [keyword, setKeyword] = useState('');
     const [categoria, setCategoria] = useState('');
-    const [precoMin, setPrecoMin] = useState('');
-    const [precoMax, setPrecoMax] = useState('');
+    const [categories, setCategories] = useState([]);
+    const [distMax, setDistMax] = useState<number | ''>('');
     const { user } = useContext(UserContext);
     const emailUser = user?.email
     const latitude = user?.latitude
     const longitude = user?.longitude
     
     useEffect(() => {
-        if (emailUser) {
+      fetchCategories(); // Buscar categorias quando o componente é montado
+    }, []);
+  
+    const fetchCategories = async () => {
+      const response = await makeRequest.get('category/see');
+      setCategories(response.data);
+    }
+
+    useEffect(() => {
+        if (emailUser && latitude && longitude) {
             makeRequest.post("post/getposthomepage", { email: emailUser, latitude: latitude, longitude: longitude }).then((res) => {
                 setEvents(res.data.data)
             }).catch((err) => {
                 console.log(err)
             })
         }
-    },[emailUser])
+    }, [emailUser, latitude, longitude])
     const [currentPage, setCurrentPage] = useState(1);
     const eventsPerPage = 9;
 
@@ -42,14 +51,13 @@ export default function Ofertas(){
         let tempEvents = events?.filter(event => 
           (keyword === '' || event.nome_produto.toLowerCase().includes(keyword.toLowerCase()) || event.descricao_oferta.toLowerCase().includes(keyword.toLowerCase())) &&
           (categoria === '' || event.categoria_produto.toLowerCase().includes(categoria.toLowerCase())) &&
-          (precoMin === '' || event.preco_oferta >= precoMin) &&
-          (precoMax === '' || event.preco_oferta <= precoMax)
+          (distMax === '' || event.distance <= +distMax)
         );
-        setFilteredEvents(tempEvents);
+        setFilteredEvents(tempEvents ?? []);
       };
   
       filterEvents();
-    }, [events, keyword, categoria, precoMin, precoMax]);
+    }, [events, keyword, categoria, distMax]);
 
 
     const indexOfLastEvent = currentPage * eventsPerPage;
@@ -88,7 +96,7 @@ export default function Ofertas(){
                         <Title className="justify-center">Filtrar</Title>
                       </li>
                       <li>
-                        <label htmlFor="keyword" className="block font-medium text-gray-700">Buscar</label>
+                        <label htmlFor="keyword" className="block font-medium text-gray-700">Produto Procurado</label>
                         <input
                           id="keyword"
                           type="text"
@@ -99,30 +107,28 @@ export default function Ofertas(){
                       </li>
                       <li>
                         <label htmlFor="categoria" className="block">Categoria</label>
-                        <input
+                        <select
                           id="categoria"
-                          type="text"
                           value={categoria}
                           onChange={(e) => setCategoria(e.target.value)}
-                          className="w-full p-2 border border-gray-300 rounded"
-                        />
+                          className="overflow-visible w-full p-3 border border-gray-300 rounded-md text-gray-700 bg-white hover:border-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition ease-in-out duration-150 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:border-gray-500"
+                        >
+                          <option value=""></option>
+                          {categories.map((category) => (
+                            <option key={category.id} value={category.name}>
+                              {category.name}
+                            </option>
+                          ))}
+                          </select>
                       </li>
                       <li className="flex items-center">
-                        <label htmlFor="precoMin" className="block font-medium text-gray-700">Preço</label>
-                        <input
-                          id="precoMin"
+                        <label htmlFor="distMax" className="block font-medium text-gray-700">Distância</label>
+                          <input
+                          id="distMax"
                           type="number"
-                          value={precoMin}
-                          onChange={(e) => setPrecoMin(e.target.value)}
-                          className="w-full p-2 border border-gray-300 rounded mx-2"
-                          placeholder="Mín."
-                        />
-                        <input
-                          id="precoMax"
-                          type="number"
-                          value={precoMax}
-                          onChange={(e) => setPrecoMax(e.target.value)}
-                          className="w-full p-2 border border-gray-300 rounded mx-2"
+                          value={distMax}
+                          onChange={(e) => setDistMax(Number(e.target.value))}
+                          className="w-full p-2 border border-gray-300 rounded mx-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
                           placeholder="Máx."
                           />
                       </li>

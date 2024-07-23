@@ -89,10 +89,18 @@ export function Header() {
             <ul className="flex flex-grow justify-end flex-wrap items-center mt-20 md:mt-0">
               <li>
                 <a
+                  href={`/painel-controle/categorias`}
+                  className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
+                >
+                  Categorias
+                </a>
+              </li>
+              <li>
+                <a
                   href={`/painel-controle/clientes`}
                   className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
                 >
-                  Clientes
+                  Usuários
                 </a>
               </li>
               <li>
@@ -119,9 +127,9 @@ export function Header() {
                   <span className="justify-center">Ver Aprovações</span>
                 </a>
               </li>
-              <li>
+{/*              <li>
                 <Image src={user?.imagem_url && user?.imagem_url.length >0 ? user?.imagem_url: '/genericperson.png'} alt="Imagem de Perfil" width={48} height={48} className='hidden md:block rounded-full' />
-              </li>
+              </li> */}
             </ul>
           </nav>
         </div>

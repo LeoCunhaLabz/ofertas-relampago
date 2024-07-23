@@ -13,10 +13,12 @@ export default function ListaOfertas(){
     const [events, setEvents] = useState<NovoAnunciante[]|undefined>(undefined);
     const { user } = useContext(UserContext);
     const emailUser = user?.email
+    const latitude = user?.latitude
+    const longitude = user?.longitude
     console.log({emailUser})
 
     useEffect(() => {
-        makeRequest.post("post/getpost", { email: emailUser }).then((res) => {
+        makeRequest.post("post/getpost", { email: emailUser, latitude, longitude }).then((res) => {
             setEvents(res.data.data)
         }).catch((err) => {
             console.log(err)

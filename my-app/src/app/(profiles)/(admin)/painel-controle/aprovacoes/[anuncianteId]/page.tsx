@@ -54,7 +54,7 @@ export default function DetalhesOferta({
                 <div className="flex w-[1176px] max-w-full flex-row flex-wrap justify-center gap-x-8 rounded-2xl bg-secondary p-4 md:justify-start">
                     <div className="w-full flex flex-col md:flex-row items-center bg-secondary p-2 overflow-hidden">
                         <div className='py-2 flex relative justify-center items-center w-[240px] h-[240px] md:w-[400px] rounded-2xl'>
-                        <img src={anunciante?.imagem_url && anunciante?.imagem_url.length > 0 ? anunciante?.imagem_url : '/genericcompany.png'} alt="Imagem do Anunciante" className="mx-auto md:w-1/2 rounded-2xl h-36 object-scale-down mb-2" />
+                        <img src={/*anunciante?.imagem_url && anunciante?.imagem_url.length > 0 ? anunciante?.imagem_url : */'/genericcompany.png'} alt="Imagem do Anunciante" className="mx-auto md:w-1/2 rounded-2xl h-36 object-scale-down mb-2" />
                         </div>
                         <div className="md:w-1/2 md:pl-6 mt-4 md:mt-0 flex flex-col">
                             <h1 className="text-3xl font-semibold mt-0 uppercase">{anunciante?.nome_comercial}</h1>
@@ -67,7 +67,7 @@ export default function DetalhesOferta({
                                 <p className="text-xl font-normal mb-2">Razão Social: {anunciante?.razao_social}</p>
                                 <p className="text-xl font-normal mb-2">Email: {anunciante?.email}</p>
                                 <p className="text-xl font-normal mb-2">Endereço: {anunciante?.endereco}</p>
-                                <p className="text-xl font-normal mb-2">Moedas: {anunciante?.moedas}</p>
+                                <p className="text-xl font-normal mb-2">Créditos: {anunciante?.moedas}</p>
                                 <p className="text-xl font-normal mb-2">Habilitado? {anunciante?.habilitado === 1 ? 'Sim' : 'Não'}</p>
                                 <p className="text-xl font-normal mb-2">Analisado? {anunciante?.analisado === 1 ? 'Sim' : 'Não'}</p>
                             </div>

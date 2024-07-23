@@ -31,7 +31,7 @@ export default function PainelControleClientes() {
 
   return (
     <main className="w-full mt-0">
-      <Title className="text-center">Clientes: {events.length} </Title>
+      <Title className="text-center">Usuários: {events.length} </Title>
       <div className="justify-center mt-8 sm:grid sm:grid-cols-auto-fit-cards flex flex-wrap gap-x-2 gap-y-4">
             {currentEvents?.map((event) => (
                 <EventCard key={event.id} event={event} />

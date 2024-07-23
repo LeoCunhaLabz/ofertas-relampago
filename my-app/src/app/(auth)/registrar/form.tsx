@@ -11,7 +11,7 @@ import { makeRequest } from '../../../../axios'
 import { AddressAutocomplete } from '@/components/AddressAutoComplete'
 
 export const Form = () => {
-  const [userType, setUserType] = useState('anunciante')
+  const [userType, setUserType] = useState('cliente')
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -73,108 +73,6 @@ export const Form = () => {
 
   return (
     <form className="space-y-12 sm:w-[400px]" onSubmit={(e)=>handleRegister(e)}>
-      <div className="flex gap-4">
-        <Button
-          type="button"
-          className={`w-full ${userType === 'anunciante' ? 'bg-red-500' : 'bg-gray-400'}`}
-          onClick={() => setUserType('anunciante')}
-        >
-          Anunciante
-        </Button>
-        <Button
-          type="button"
-          className={`w-full ${userType === 'cliente' ? 'bg-red-500' : 'bg-gray-400'}`}
-          onClick={() => setUserType('cliente')}
-        >
-          Cliente
-        </Button>
-      </div>
-
-      {userType === 'anunciante' && (
-        <>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="cnpj">Nome de Usuário</Label>
-            <Input
-              className="w-full"
-              required
-              value={formData.username}
-              onChange={handleInputChange}
-              id="username"
-              type="text"
-            />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="cnpj">CNPJ</Label>
-            <Input
-              className="w-full"
-              required
-              value={formData.cnpj}
-              onChange={handleInputChange}
-              id="cnpj"
-              type="text"
-            />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="companyName">Nome da empresa ou Razão Social</Label>
-            <Input
-              className="w-full"
-              required
-              value={formData.razaoSocial}
-              onChange={handleInputChange}
-              id="razaoSocial"
-              type="text"
-            />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="tradeName">Marca ou Nome Comercial</Label>
-            <Input
-              className="w-full"
-              required
-              value={formData.nomeComercial}
-              onChange={handleInputChange}
-              id="nomeComercial"
-              type="text"
-            />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="companyEmail">Email da empresa</Label>
-            <Input
-              className="w-full"
-              required
-              value={formData.email}
-              onChange={handleInputChange}
-              id="email"
-              type="email"
-            />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="password">Senha</Label>
-            <Input
-              className="w-full"
-              required
-              value={formData.password}
-              onChange={handleInputChange}
-              id="password"
-              type="password"
-            />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="confirmPassword">Confirmar Senha</Label>
-            <Input
-              className="w-full"
-              required
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              id="confirmPassword"
-              type="password"
-            />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="storeAddress">Endereço da Loja</Label>
-            <AddressAutocomplete onSelectAddress={handleSelectAddress} />
-          </div>
-        </>
-      )}
 
       {userType === 'cliente' && (
         <>

@@ -28,7 +28,7 @@ export default function CheckoutPagePJ() {
                     Pacote {event.name}
                     <br />
                     <br />
-                    Nº de moedas: {event.quantity}
+                    Nº de Créditos: {event.quantity}
                     <br />
                     <br />
                     Saldo após compra: {event.balance}

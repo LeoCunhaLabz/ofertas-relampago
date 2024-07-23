@@ -100,7 +100,7 @@ export function Header() {
           <nav className="flex-col flex-grow ">
             <ul className="flex flex-grow justify-end flex-wrap items-center mt-20 md:mt-0">
               <li>
-                <a href="/comprar-moedas">
+                <a href="/comprar-creditos">
                   <div
                     className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
                   >
@@ -111,7 +111,7 @@ export function Header() {
                     alt='Saldo'
                     className="mr-2"
                     />
-                    <span className='text-red-500 font-bold mr-1'>{user?.moedas}</span>moedas
+                    <span className='text-red-500 font-bold mr-1'>{user?.moedas}</span>créditos
                   </div>
                 </a>
               </li>
@@ -141,9 +141,9 @@ export function Header() {
                   </svg>
                 </a>
               </li>
-              <li>
+{/*              <li>
                 <Image src={user?.imagem_url && user?.imagem_url.length >0? user?.imagem_url: '/genericcompany.png'} alt="Imagem de Perfil" width={100} height={100} className='max-h-32 object-contain my-4 rounded-md' />
-              </li> 
+              </li> */}
             </ul>
           </nav>
         </div>

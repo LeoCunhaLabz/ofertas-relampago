@@ -68,16 +68,45 @@ export const createPost = async (req, res) => {
     }})}
 
     export const getPost = (req, res) => {
-        const { email } = req.body;
+        const { email, latitude, longitude } = req.body;
         db.query(
         "SELECT p.*, u.nome_comercial, u.email FROM anuncios AS p JOIN anunciantes AS u on (p.id_anunciante = u.id) WHERE email = ? ORDER BY habilitado DESC, data_cadastro DESC", [email],
         (error, data) => {
             if (error) {
                 console.log(error);
                 return res.status(500).json({ message: "Erro ao buscar posts." });
-            }else if (data) {
-                return res.status(200).json({ data });
-            }
+            }else {
+                db.query(
+                    `UPDATE anuncios AS a
+                    JOIN anunciantes AS an 
+                    ON a.id_anunciante = an.id
+                    SET a.latitude = an.latitude, a.longitude = an.longitude
+                    WHERE a.id_anunciante = an.id`,
+                    (error) => {
+                        if (error) {
+                            console.log(error);
+                            return res.status(500).json({ message: "Erro ao buscar posts." });
+                        }
+                        db.query(
+                            `SELECT a.*, an.latitude AS anunciante_latitude, an.longitude AS anunciante_longitude,
+                        (6371 * acos(cos(radians(?)) * cos(radians(a.latitude)) * cos(radians(a.longitude) - radians(?)) + sin(radians(?)) * sin(radians(a.latitude)))) AS distance
+                        FROM anuncios AS a
+                        JOIN anunciantes AS an ON a.id_anunciante = an.id
+                        WHERE email = ?
+                        ORDER BY a.ativo DESC, distance ASC, a.data_cadastro DESC`,
+                        [latitude, longitude, latitude, email],
+                        (error, data) => {
+                            if (error) {
+                                console.log(error);
+                                return res.status(500).json({ message: "Erro ao buscar posts." });
+                            }else if (data) {
+                                return res.status(200).json({ data });
+                            }
+                        }
+                    )
+                }
+            )
+        }
     })};
 
     export const getRandomPost = (req, res) => {
@@ -203,7 +232,7 @@ export const createPost = async (req, res) => {
                 (error, data) => {
                     if (error) {
                         console.log(error);
-                        return res.status(500).json({ message: "Erro ao buscar clientes." });
+                        return res.status(500).json({ message: "Erro ao buscar Usuários." });
                     }else if (data) {
                         return res.status(200).json({ data });
                     }
@@ -284,6 +313,19 @@ export const createPost = async (req, res) => {
                     console.log(error);
                     return res.status(500).json({ message: "Erro ao aprovar anunciante." });
                 }else if (data) {
+                    transporter.sendMail({
+                        from: 'Ofertas Relâmpago <naoresponda@ofertasrelampago.com>',
+                        to: email,
+                        subject:'Ofertas Relâmpago - Parabéns! Sua conta foi aprovada!',
+                        text: `Parabéns! Seu cadastro como ANUNCIANTE foi aprovado. Agora você pode acessar o site e fazer sua primeira postagem.`, // Corpo do e-mail em texto plano
+                        html: `<p>Parabéns! Seu cadastro como ANUNCIANTE foi aprovado.</p><p>Agora você pode acessar o site e fazer sua primeira postagem.</p>` // Corpo do e-mail em HTML
+                    }, (error, info) => {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log("Email enviado: " + info.response);
+                        }
+                    });
                     return res.status(200).json({ message: "Anunciante analisado com sucesso." });
                 }
             }

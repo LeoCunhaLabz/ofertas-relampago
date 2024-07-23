@@ -65,6 +65,14 @@ export function Header() {
             <ul className="flex flex-grow justify-end flex-wrap items-center mt-20 md:mt-0">
               <li>
                 <a
+                  href="/como-funciona"
+                  className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
+                >
+                  Como funciona?
+                </a>
+              </li>
+              <li>
+                <a
                   href="/"
                   className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
                 >

@@ -199,7 +199,7 @@ const Settings = () => {
           <form onSubmit={onSubmit} className="space-y-6">
             {userType === 'cliente' ? (
               <>
-                <div className="grid items-center gap-1.5 mt-6">
+{/*                <div className="grid items-center gap-1.5 mt-6">
                   <div class="flex items-center justify-center w-full">
                       {img && <img className="rounded-lg max-h-32  object-contain" src={URL.createObjectURL(img)} alt="Imagem do post"></img>}
                       {!img &&<label for="img" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -211,9 +211,9 @@ const Settings = () => {
                               <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG</p>
                           </div>
                           <input id="img" type="file" class="hidden" onChange={(e) => e.target.files && setImg(e.target.files[0])} />
-                      </label>}
+                      </label>
                   </div> 
-                </div>
+                </div> */}
                 <div className="grid items-center gap-1.5">
                   <Label htmlFor="cpf">CPF</Label>
                   <Input
@@ -298,7 +298,7 @@ const Settings = () => {
               </>
             ) : (
               <>
-                <div className="grid items-center gap-1.5 mt-6">
+{/*                <div className="grid items-center gap-1.5 mt-6">
                   <div class="flex items-center justify-center w-full">
                       {img && <img className="rounded-lg max-h-32  object-contain" src={URL.createObjectURL(img)} alt="Imagem do post"></img>}
                       {!img &&<label for="img" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -312,7 +312,7 @@ const Settings = () => {
                           <input id="img" type="file" class="hidden" onChange={(e) => e.target.files && setImg(e.target.files[0])} />
                       </label>}
                   </div> 
-                </div>
+                </div> */}
                 <div className="grid items-center gap-1.5">
                   <Label htmlFor="cnpj">CNPJ</Label>
                   <Input
@@ -457,9 +457,9 @@ const Settings = () => {
       <aside className={`fixed inset-0 z-40 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} sm:relative sm:translate-x-0 transition-transform duration-300 ease-in-out sm:block sm:w-1/4 p-4 bg-white text-gray-800`}>
         <nav>
           <ul className="space-y-4 mb-4">
-            <li>
+{/*            <li>
               <Image src={user?.imagem_url && user?.imagem_url.length >0? user?.imagem_url: '/genericperson.png'} alt="Imagem de Perfil" width={200} height={48} className='max-h-32 object-contain my-4' />
-            </li> 
+            </li> */}
             <li>
               <button
                 className={`w-full text-left py-2 px-4 rounded transition-colors duration-300 ${
@@ -482,18 +482,6 @@ const Settings = () => {
                 onClick={() => setSelectedOption('alterar-senha')}
               >
                 Alterar Senha
-              </button>
-            </li>
-            <li>
-              <button
-                className={`w-full text-left py-2 px-4 rounded transition-colors duration-300 ${
-                  selectedOption === 'historico-transacoes'
-                    ? 'bg-gray-600 text-white font-bold'
-                    : 'hover:bg-gray-300'
-                }`}
-                onClick={() => setSelectedOption('historico-transacoes')}
-              >
-                Histórico de Transações
               </button>
             </li>
             <li>

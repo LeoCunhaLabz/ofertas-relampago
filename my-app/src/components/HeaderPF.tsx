@@ -121,9 +121,9 @@ export function Header() {
                   </svg>
                 </a>
               </li>
-              <li>
+{/*              <li>
                 <Image src={user?.imagem_url && user?.imagem_url.length >0 ? user?.imagem_url: '/genericperson.png'} alt="Imagem de Perfil" width={48} height={48} className='hidden md:block rounded-full' />
-              </li>
+              </li> */}
             </ul>
           </nav>
         </div>

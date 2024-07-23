@@ -1,6 +1,6 @@
 export function Footer() {
     return (
-      <footer className="pb-4 mt-48">
+      <footer className="pb-4 mt-6">
         <div className="max-w-6xl xl:max-w-6xl mx-auto divide-y divide-gray-200 px-4 sm:px-6 md:px-8">
           <ul className="Footer_nav__2rFid text-sm font-medium sm:pb-20 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-y-10 gap-x-20 justify-items-center">
             <li className="space-y-5 row-span-2">
@@ -11,25 +11,17 @@ export function Footer() {
                 <li>
                   <a
                     className="text-sm hover:text-gray-900 transition-colors duration-200"
-                    href="/"
+                    href="/como-funciona"
                   >
-                    Fale Conosco
+                    Quem Somos
                   </a>
                 </li>
                 <li>
                   <a
                     className="text-sm hover:text-gray-900 transition-colors duration-200"
-                    href="/"
+                    href="/anunciante/login"
                   >
-                    Carreira
-                  </a>
-                </li>{" "}
-                <li>
-                  <a
-                    className="text-sm hover:text-gray-900 transition-colors duration-200"
-                    href="/"
-                  >
-                    Quem Somos
+                    Já sou anunciante
                   </a>
                 </li>
               </ul>
@@ -101,7 +93,7 @@ export function Footer() {
             <ul className="text-center flex justify-evenly w-full">
               <li>
                 <a
-                  href="/"
+                  href="/termos-uso"
                   className="text-sm md:text-md text-gray-700 transition-colors duration-300 hover:text-deep-purple-accent-400 font-semibold"
                 >
                   Termos de Uso
@@ -109,7 +101,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/"
+                  href="/politica-privacidade"
                   className="text-sm md:text-md text-gray-700 transition-colors duration-300 hover:text-deep-purple-accent-400 font-semibold"
                 >
                   Política de Privacidade
@@ -117,7 +109,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/"
+                  href="/politica-cookies"
                   className="text-sm md:text-md text-gray-700 transition-colors duration-300 hover:text-deep-purple-accent-400 font-semibold"
                 >
                   Política de Cookies

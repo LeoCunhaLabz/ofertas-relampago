@@ -19,6 +19,11 @@ export default function Login() {
             <Link className="text-indigo-500 hover:underline" href="/esqueci-senha">
               Esqueci minha senha
             </Link>{' '}
+            <br />
+            <br />
+            <Link className="text-indigo-500 hover:underline" href="/anunciante/login">
+              Sou anunciante
+            </Link>{' '}
           </p>
     </AuthPage>
   )

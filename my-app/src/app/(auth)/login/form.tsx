@@ -15,7 +15,7 @@ export const Form = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [userType, setUserType] = useState('anunciante')
+  const [userType, setUserType] = useState('cliente')
   const {setUser} = useContext(UserContext)
 
   const router = useRouter();
@@ -45,20 +45,6 @@ export const Form = () => {
 
   return (
     <form className="space-y-12 sm:w-[400px]" onSubmit={(e)=>handleLogin(e)}>
-      <div className="flex gap-4">
-        <Button
-          className={`w-full ${userType === 'anunciante' ? 'bg-red-500' : 'bg-gray-400'}`}
-          onClick={() => setUserType('anunciante')}
-        >
-          Anunciante
-        </Button>
-        <Button
-          className={`w-full ${userType === 'cliente' ? 'bg-red-500' : 'bg-gray-400'}`}
-          onClick={() => setUserType('cliente')}
-        >
-          Cliente
-        </Button>
-      </div>
       <div className="grid w-full items-center gap-1.5">
         <Label htmlFor="email">Email</Label>
         <Input

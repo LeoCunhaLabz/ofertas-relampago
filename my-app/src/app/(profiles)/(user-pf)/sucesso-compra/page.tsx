@@ -34,7 +34,7 @@ export default function SucessoCompra({
                             <div className="flex max-w-full flex-col gap-y-6">
                                 <div className="flex flex-col gap-y-2">
                                     <p className="text-2xl font-semibold">Informações da Oferta</p>
-                                    <p className="font-normal">Moedas Utilizadas: TO DO</p>
+                                    <p className="font-normal">Créditos Utilizados: TO DO</p>
                                     <p className="font-normal">Valor Original: {event.location}</p>
                                     <p className="font-normal">Valor com Desconto: {event.location}</p>
                                     <p className="font-normal">Duração da Oferta: {event.location}</p>

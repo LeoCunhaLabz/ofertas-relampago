@@ -22,10 +22,10 @@ export function     UniqueEvent(props: UniqueEventCardProps) {
             <h1 className="text-3xl font-semibold mt-10 mb-6">Anunciante</h1>
                 <div className="flex w-[1176px] max-w-full flex-row flex-wrap justify-center gap-x-8 rounded-2xl bg-secondary p-4 md:justify-start">
                     <div className="w-full flex flex-col md:flex-row items-center bg-secondary p-2 overflow-hidden">
-                        <div className='py-2 flex relative justify-center items-center w-[240px] h-[240px] md:w-[400px] rounded-2xl'>
+{/*                        <div className='py-2 flex relative justify-center items-center w-[240px] h-[240px] md:w-[400px] rounded-2xl'>
                         <img src={props.event.imagem_url_anunciante && props.event.imagem_url_anunciante.length > 0 ? props.event.imagem_url_anunciante : '/genericcompany.png'} alt="Imagem do Anunciante" className="mx-auto md:w-1/2 rounded-2xl h-36 object-scale-down mb-2" />
-                        </div>
-                        <div className="md:w-1/2 md:pl-6 mt-4 md:mt-0 flex flex-col">
+                        </div> */}
+                        <div className="md:w-full md:pl-6 mt-4 md:mt-0 flex flex-col">
                             <h1 className="text-3xl font-semibold mt-0 uppercase">{props.event.nome_comercial}</h1>
                             <div className='mb-8'>
                                 <p className="text-sm">CPNJ: {props.event.cnpj}</p>

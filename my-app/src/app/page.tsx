@@ -2,9 +2,6 @@
 
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import { makeRequest } from '../../axios';
 
 export default function Page() {
 
@@ -33,21 +30,6 @@ export default function Page() {
             className="w-80 md:ml-1 ml-24"
             alt="iPhone-12"
             src="/iphone12-mockup.png"  
-          ></img>
-        </div>
-      </div>
-      <div className="grr max-w-7xl mx-auto text-center">
-        <h1 className="mb-8 text-6xl Avenir font-semibold text-gray-900">
-          Ofertas incríveis, todos os dias.
-        </h1>
-        <h1 className="mb-8 text-2xl Avenir font-semibold text-gray-600 text-center">
-          Acesse promoções incríveis de mercados próximos sem sair do seu celular.
-        </h1>
-        <div className="container flex flex-col items-center justify-center mx-auto rounded-lg ">
-          <img
-            className="object-cover object-center w-3/4 mb-10 g327 border rounded-lg shadow-md"
-            alt="Placeholder Image"
-            src="/placeholder-lp.png"
           ></img>
         </div>
       </div>
