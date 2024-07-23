@@ -29,9 +29,16 @@ export const Form = () => {
   })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const handleSelectAddress = (addressData) => {
-  setFormData((prevData) => ({ ...prevData, endereco: addressData.address }))
-};
+  
+  interface AddressData {
+    address: string;
+    lat?: number;
+    lng?: number;
+  }
+  
+  const handleSelectAddress = (addressData: AddressData) => {
+    setFormData((prevData) => ({ ...prevData, endereco: addressData.address }))
+  };
 
   const handleRegister = (e:any) => {
     e.preventDefault();
