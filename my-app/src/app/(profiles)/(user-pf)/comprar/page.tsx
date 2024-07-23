@@ -11,15 +11,7 @@ interface EventModel {
 }
 
 export default function CheckoutPagePF() {
-    const event: EventModel = {
-        id: "1",
-        name: "Carne Moída",
-        organization: "Extra Super Mercado",
-        date: "2022-12-31T00:00:00.000Z",
-        location: "São Paulo",
-        quantity: "1", 
-        price: "100,00",
-    };
+
     return (
         <main className="mt-10 flex flex-wrap justify-center md:justify-between">
             <div className="mb-4 flex max-h-[300px] w-full max-w-[478px] flex-col gap-y-6 rounded-2xl bg-secondary p-4">
