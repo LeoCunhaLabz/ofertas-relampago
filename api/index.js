@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 const corsOptions = {
-  origin: ["http://167.88.39.189:3000", "http://localhost:3000"],
+  origin: ["http://167.88.39.189:3000", "http://localhost:3000", "http://ofertarelampago.app.br", "http://www.ofertarelampago.app.br"],
   credentials:true,
   methods:["GET","POST","PUT","DELETE","OPTIONS"],
   allowedHeaders:["Content-Type","Authorization","Access-Control-Allow-Credentials"],
@@ -39,7 +39,7 @@ app.use("/api/category/", categoryRouter);
 app.options('*', cors(corsOptions));
 
 app.listen(PORT, () => {
-  console.log("Server is running on port ${PORT}");
+  console.log(`Server is running on port ${PORT}`);
 });
 
 app.get("/", (req, res) => {
