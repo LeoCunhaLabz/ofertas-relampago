@@ -13,7 +13,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14' # Escolha a versão do Node.js que se adequa ao seu projeto
+          node-version: '20' # Escolha a versão do Node.js que se adequa ao seu projeto
       
       - name: Reinstalar bcrypt na pasta api
         run: |
