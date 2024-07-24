@@ -24,15 +24,16 @@ export default function DetalhesOferta({
     const idAnunciante = user?.id;
     
     useEffect(() => {
-        setUserType(localStorage.getItem("ofertas-relampago:userType"))
-        if (userType && idAnunciante) {
-            makeRequest.post("post/getuniquepost", { oferta_id: ofertaId, user_type: userType, id_anunciante: idAnunciante, latitude: latitude, longitude: longitude }).then((res) => {
+        const storedUserType = localStorage.getItem("ofertas-relampago:userType") || ""; // Fallback to an empty string if null
+        setUserType(storedUserType);
+        if (storedUserType && idAnunciante) {
+            makeRequest.post("post/getuniquepost", { oferta_id: ofertaId, user_type: storedUserType, id_anunciante: idAnunciante, latitude: latitude, longitude: longitude }).then((res) => {
                 setEvent(res.data.data)
             }).catch((err) => {
                 console.log(err);
-            }
-        )}
-    },[ofertaId, idAnunciante, userType, latitude, longitude])
+            });
+        }
+    }, [ofertaId, idAnunciante, userType, latitude, longitude]);
 
     return ( 
     <main className="mt-10">

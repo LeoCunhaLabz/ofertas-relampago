@@ -1,10 +1,9 @@
 "use client"
 
-import { NovoAnunciante, AnuncianteModel, UniqueEventModel } from "@/models";
-import Link from "next/link";
+import { AnuncianteModel, UniqueEventModel, EventModel } from "@/models";
 import { notFound } from "next/navigation"
 import { format } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR'; // Importe o locale que você deseja usar
+import { ptBR } from 'date-fns/locale'; // Importe o locale que você deseja usar
 import React, { useEffect, useState } from "react";
 import { makeRequest } from "@/../../axios";
 import { useContext } from "react";
@@ -19,8 +18,8 @@ export default function DetalhesOferta({
     }
 }) {
 
-    const [event, setEvent] = useState<UniqueEventModel[]|undefined>(undefined);
-    const [anunciante, setAnunciante] = useState<AnuncianteModel[]|undefined>(undefined);
+    const [event, setEvent] = useState<EventModel[]|undefined>(undefined);
+    const [anunciante, setAnunciante] = useState<AnuncianteModel|undefined>(undefined);
     const anuncianteId = params.anuncianteId;
     const { user } = useContext(UserContext);
     const [userType, setUserType] = useState("");
@@ -72,8 +71,8 @@ export default function DetalhesOferta({
                                 <p className="text-xl font-normal mb-2">Email: {anunciante?.email}</p>
                                 <p className="text-xl font-normal mb-2">Endereço: {anunciante?.endereco}</p>
                                 <p className="text-xl font-normal mb-2">Créditos: {anunciante?.moedas}</p>
-                                <p className="text-xl font-normal mb-2">Habilitado? {anunciante?.habilitado === 1 ? 'Sim' : 'Não'}</p>
-                                <p className="text-xl font-normal mb-2">Analisado? {anunciante?.analisado === 1 ? 'Sim' : 'Não'}</p>
+                                <p className="text-xl font-normal mb-2">Habilitado? {Number(anunciante?.habilitado) === 1 ? 'Sim' : 'Não'}</p>
+                                <p className="text-xl font-normal mb-2">Analisado? {Number(anunciante?.analisado) === 1 ? 'Sim' : 'Não'}</p>
                             </div>
                         </div>
                     </div>

@@ -9,13 +9,15 @@ import { makeRequest } from "@/../../axios";
 import { useContext } from 'react'
 import { UserContext } from '@/context/UserContext'
 import Image from 'next/image';
+import React from 'react';
+import { EventModel } from "@/models";
 
 export default function Ofertas(){
     const [events, setEvents] = useState<NovoAnunciante[]|undefined>(undefined);
     const [filteredEvents, setFilteredEvents] = useState<NovoAnunciante[]>([]);
     const [keyword, setKeyword] = useState('');
     const [categoria, setCategoria] = useState('');
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState<EventModel[]|undefined>(undefined);
     const [distMax, setDistMax] = useState<number | ''>('');
     const { user } = useContext(UserContext);
     const emailUser = user?.email
@@ -115,7 +117,7 @@ export default function Ofertas(){
                           className="overflow-visible w-full p-3 border border-gray-300 rounded-md text-gray-700 bg-white hover:border-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition ease-in-out duration-150 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:border-gray-500"
                         >
                           <option value=""></option>
-                          {categories.map((category) => (
+                          {categories?.map((category) => (
                             <option key={category.id} value={category.name}>
                               {category.name}
                             </option>

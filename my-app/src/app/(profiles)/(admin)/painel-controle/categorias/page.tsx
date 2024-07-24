@@ -28,7 +28,7 @@ export default function Categorias() {
     }
   }
 
-  const removeCategory = async (category) => {
+  const removeCategory = async (category: { name: any; }) => {
     await makeRequest.delete(`category/remove?category=${category.name}`);
     fetchCategories();
   }

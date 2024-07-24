@@ -27,10 +27,10 @@ export default function Homepage(){
     },[emailUser, latitude, longitude])
 
     // Função para converter strings de data para objetos Date
-    const parseProductDates = (product) => ({
+    const parseProductDates = (product: { data_cadastro: string | number | Date; data_fim_oferta: string | number | Date; }) => ({
         ...product,
         data_cadastro: new Date(product.data_cadastro),
-        data_inicio_oferta: new Date(product.data_inicio_oferta),
+        data_inicio_oferta: new Date(), // Add a default value for data_inicio_oferta
         data_fim_oferta: new Date(product.data_fim_oferta),
     });
 
@@ -38,7 +38,7 @@ export default function Homepage(){
     const dataWithParsedDates = events?.map(parseProductDates) ?? [];
 
     // Funções para obter os conjuntos de produtos
-    const getNearerProducts = (data) => data
+    const getNearerProducts = (data: any[]) => data
     .sort((a, b) => a.distance - b.distance).slice(0, 30)
     .sort((a, b) => b.ativo - a.ativo).slice(0, 30);    
     const nearerProducts = getNearerProducts(dataWithParsedDates);

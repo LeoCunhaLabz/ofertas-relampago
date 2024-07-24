@@ -6,17 +6,19 @@ import { useEffect, useState, useContext } from "react";
 import { makeRequest } from "@/../../axios";
 import { EventCard } from "@/components/AprovacaoCard";
 import Link from "next/link";
+import { EventModel, AnuncianteModel } from "@/models";
+import React from "react";
 
 export default function PainelControleClientes() {
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState<AnuncianteModel[]|undefined>(undefined);
     const { user } = useContext(UserContext);
 
     useEffect(() => {
         if (user) {
             makeRequest.post("post/getallanunciantes", { email: user?.email }).then((res) => {
                 setEvents(res.data.data
-                    .filter(event => event.analisado === 0)
-                    .sort((a, b) => b.id - a.id));
+                    .filter((event: EventModel) => event.analisado === 0)
+                    .sort((a: EventModel, b: EventModel) => Number(b.id) - Number(a.id)));
             }).catch((err) => {
                 console.log(err)
             })
@@ -34,7 +36,7 @@ export default function PainelControleClientes() {
 
   return (
     <main className="w-full mt-0">
-      <Title className="text-center">Aprovações Pendentes: {events.length} </Title>
+      <Title className="text-center">Aprovações Pendentes: {events?.length} </Title>
       <div className="justify-center mt-8 sm:grid sm:grid-cols-auto-fit-cards flex flex-wrap gap-x-2 gap-y-4">
             {currentEvents?.map((event) => (
                     <EventCard key={event.id} event={event} />

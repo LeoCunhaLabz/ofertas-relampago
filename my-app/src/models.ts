@@ -1,4 +1,6 @@
 export type EventModel = {
+    name: string | number | readonly string[] | undefined;
+    id: string;
     id_anuncio: string;
     data_cadastro: string;
     id_anunciante: string;
@@ -11,6 +13,7 @@ export type EventModel = {
     data_fim_oferta: string;
     ativo: number;
     distance: number;
+    analisado: number;
 };
 
 export type ClientModel = {
@@ -44,6 +47,7 @@ export type AnuncianteModel = {
     imagem_url: string;
     username: string;
     password: string;
+    analisado: string;
 }
 
 export type NovoAnunciante = {
@@ -67,9 +71,12 @@ export type NovoAnunciante = {
     preco_oferta: string;
     imagem_url: string; 
     data_fim_oferta: string;
+    ativo: number;
+    analisado: number;
 };
 
 export type UniqueEventModel = {
+    id: null | undefined;
     id_anuncio: string;
     data_cadastro: string;
     id_anunciante: string;

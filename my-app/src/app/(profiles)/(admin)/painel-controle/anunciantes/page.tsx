@@ -5,17 +5,18 @@ import { UserContext } from '@/context/UserContext'
 import { useEffect, useState, useContext } from "react";
 import { makeRequest } from "@/../../axios";
 import { EventCard } from "@/components/AnuncianteCard";
+import { AnuncianteModel } from "@/models";
 
 export default function PainelControleClientes() {
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState<AnuncianteModel[]>([]);
     const { user } = useContext(UserContext);
 
     useEffect(() => {
         if (user) {
             makeRequest.post("post/getallanunciantes", { email: user?.email }).then((res) => {
                 setEvents(res.data.data
-                    .filter(event => event.analisado === 1)
-                    .sort((a, b) => b.id - a.id));
+                    .filter((event: { analisado: number; }) => event.analisado === 1)
+                    .sort((a: { id: number; }, b: { id: number; }) => b.id - a.id));
             }).catch((err) => {
                 console.log(err)
             })
@@ -27,7 +28,7 @@ export default function PainelControleClientes() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const indexOfLastEvent = currentPage * eventsPerPage;
     const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-    const currentEvents = events?.slice(indexOfFirstEvent, indexOfLastEvent) ?? [];
+    const currentEvents = events?.slice(indexOfFirstEvent, indexOfLastEvent);
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 

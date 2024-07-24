@@ -39,7 +39,7 @@ interface Cliente {
     longitude: string;
 }
 
-type User = Anunciante | Cliente | undefined;
+export type User = Anunciante | Cliente | undefined;
 
 
 interface UserContextType {

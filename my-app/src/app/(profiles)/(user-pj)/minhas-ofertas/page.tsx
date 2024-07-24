@@ -8,9 +8,11 @@ import { Header } from "@/components/HeaderPJ";
 import { makeRequest } from "@/../../axios";
 import { useContext } from 'react'
 import { UserContext } from '@/context/UserContext'
+import React from 'react';
+import { EventModel } from "@/models";
 
 export default function ListaOfertas(){
-    const [events, setEvents] = useState<NovoAnunciante[]|undefined>(undefined);
+    const [events, setEvents] = useState<EventModel[]|undefined>(undefined);
     const { user } = useContext(UserContext);
     const emailUser = user?.email
     const latitude = user?.latitude

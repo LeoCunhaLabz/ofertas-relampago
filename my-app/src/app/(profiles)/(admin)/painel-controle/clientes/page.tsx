@@ -5,9 +5,11 @@ import { UserContext } from '@/context/UserContext'
 import { useEffect, useState, useContext } from "react";
 import { makeRequest } from "@/../../axios";
 import { EventCard } from "@/components/ClientCard";
+import React from "react";
+import { EventModel, AnuncianteModel, ClientModel } from "@/models";
 
 export default function PainelControleClientes() {
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState<ClientModel[]|undefined>(undefined);
     const { user } = useContext(UserContext);
 
     useEffect(() => {
@@ -31,7 +33,7 @@ export default function PainelControleClientes() {
 
   return (
     <main className="w-full mt-0">
-      <Title className="text-center">Usuários: {events.length} </Title>
+      <Title className="text-center">Usuários: {events?.length} </Title>
       <div className="justify-center mt-8 sm:grid sm:grid-cols-auto-fit-cards flex flex-wrap gap-x-2 gap-y-4">
             {currentEvents?.map((event) => (
                 <EventCard key={event.id} event={event} />

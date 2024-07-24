@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert } from '@/components/ui/alert'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@/../../axios';
 import { UserContext } from '@/context/UserContext'
 import { Success } from '@/components/ui/success'
@@ -47,7 +47,7 @@ const Settings = () => {
   const router = useRouter()
   const [userType, setUserType] = useState('')
   const [img, setImg] = useState<File | null>(null);
-  const handleSelectAddress = (addressData) => {
+  const handleSelectAddress = (addressData: { address: any }) => {
     setFormData((prevData) => ({ ...prevData, endereco: addressData.address }))
   };
 
@@ -74,15 +74,15 @@ const Settings = () => {
         confirmNewPassword: '',
         representativeName: '',
         representativeEmail: '',
-        cnpj: user?.cnpj || '',
-        razaoSocial: user?.razao_social || '',
-        nomeComercial: user?.nome_comercial || '',
+        cnpj: 'cnpj' in user ? user.cnpj : '',
+        razaoSocial: 'razao_social' in user ? user.razao_social : '',
+        nomeComercial: 'nome_comercial' in user ? user.nome_comercial : '',
         endereco: user?.endereco || '',
-        cpf: user?.cpf || '',
-        nome_completo: user?.nome_completo || '',
-        nascimento: user?.nascimento || '',
-        genero: user?.genero || '',
-        celular: user?.celular || '',
+        cpf: 'cpf' in user ? user.cpf : '',
+        nome_completo: 'nome_completo' in user ? user.nome_completo : '',
+        nascimento: 'nascimento' in user ? user.nascimento : '',
+        genero: 'genero' in user ? user.genero : '',
+        celular: 'celular' in user ? user.celular : '',
       });
     }
   }, [user]);
@@ -187,7 +187,7 @@ const Settings = () => {
   }
 
   // Supondo que formData.nascimento seja uma string no formato "DD/MM/YYYY"
-  const convertDateString = (isoStr) => {
+  const convertDateString = (isoStr: string) => {
   // Extrai apenas a parte da data (YYYY-MM-DD) da string ISO
   return isoStr.split('T')[0];
 };
@@ -221,8 +221,6 @@ const Settings = () => {
                     type="text"
                     value={formData.cpf}
                     onChange={handleInputChange}
-                    placeholder={user?.cpf}
-                    
                   />
                 </div>
                 <div className="grid items-center gap-1.5">
@@ -231,9 +229,7 @@ const Settings = () => {
                     id="nome_completo"
                     type="text"
                     value={formData.nome_completo}
-                    onChange={handleInputChange}
-                    placeholder={user?.nome_completo}
-                    
+                    onChange={handleInputChange}                    
                   />
                 </div>
                 <div className="grid items-center gap-1.5">
@@ -259,9 +255,7 @@ const Settings = () => {
                     id="genero"
                     type="text"
                     value={formData.genero}
-                    onChange={handleInputChange}
-                    placeholder={user?.genero}
-                    
+                    onChange={handleInputChange}                    
                   />
                 </div>
                 <div className="grid items-center gap-1.5">
@@ -270,9 +264,7 @@ const Settings = () => {
                     id="celular"
                     type="tel"
                     value={formData.celular}
-                    onChange={handleInputChange}
-                    placeholder={user?.celular}
-                    
+                    onChange={handleInputChange}                    
                   />
                 </div>
                 <div className="grid items-center gap-1.5">
@@ -320,7 +312,6 @@ const Settings = () => {
                     type="text"
                     value={formData.cnpj}
                     onChange={handleInputChange}
-                    placeholder={user?.cnpj}
                   />
                 </div>
                 <div className="grid items-center gap-1.5">
@@ -330,7 +321,6 @@ const Settings = () => {
                     type="text"
                     value={formData.razaoSocial}
                     onChange={handleInputChange}
-                    placeholder={user?.razao_social}
                   />
                 </div>
                 <div className="grid items-center gap-1.5">
@@ -340,12 +330,11 @@ const Settings = () => {
                     type="text"
                     value={formData.nomeComercial}
                     onChange={handleInputChange}
-                    placeholder={user?.nome_comercial}
                   />
                 </div>
                 <div className="grid items-center gap-1.5">
                   <Label htmlFor="nome">Endereço</Label>
-                  <AddressAutocomplete onSelectAddress={handleSelectAddress} />
+                  <AddressAutocomplete onSelectAddress={handleSelectAddress} value={undefined} />
                 </div> 
                 <div className="grid items-center gap-1.5">
                   <Label htmlFor="password">Senha</Label>
