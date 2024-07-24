@@ -257,7 +257,6 @@ export const login = (req, res) => {
                         .cookie("refreshToken", refreshToken,{
                             httpOnly:true,
                             domain: 'ofertarelampago.app.br', // Define o domínio do cookie
-                            path: '/', // Caminho para o qual o cookie é válido
                             secure: true,
                         })
                         .status(200).json({ 
@@ -312,7 +311,6 @@ export const login = (req, res) => {
                         .cookie("refreshToken", refreshToken,{
                             httpOnly:true,
                             domain: 'ofertarelampago.app.br', // Define o domínio do cookie
-                            path: '/', // Caminho para o qual o cookie é válido
                             secure: true,})
                         .status(200).json({ 
                             msg:"Usuário logado com sucesso", 
@@ -418,7 +416,6 @@ export const refresh = (req, res) => {
         .cookie("refreshToken", refreshToken,{
             httpOnly:true,
             domain: 'ofertarelampago.app.br', // Define o domínio do cookie
-            path: '/', // Caminho para o qual o cookie é válido
             secure: true,
         })
         .status(200).json({ 
@@ -508,7 +505,6 @@ export const redefinirSenha = (req, res) => {
                             res.cookie("accessToken", token,{httpOnly:true})
                             .cookie("refreshToken", refreshToken,{httpOnly:true,
                                 domain: 'ofertarelampago.app.br', // Define o domínio do cookie
-                                path: '/', // Caminho para o qual o cookie é válido
                                 secure: true,
                             })
                             .status(200).json({ 
