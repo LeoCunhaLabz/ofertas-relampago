@@ -3,13 +3,34 @@ on:
   push:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # Escolha a versão do Node.js que se adequa ao seu projeto
+      
+      - name: Reinstalar bcrypt na pasta api
+        run: |
+          cd api
+          npm uninstall bcrypt
+          npm install bcrypt
+      
+      - name: Instalar next.js na pasta my-app
+        run: |
+          cd my-app
+          npm install next
+      
+      - name: Build da aplicação next.js na pasta my-app
+        run: |
+          cd my-app
+          npm run build
+      
       - name: Deploy para meu hosting
         uses: easingthemes/ssh-deploy@main
         env:
