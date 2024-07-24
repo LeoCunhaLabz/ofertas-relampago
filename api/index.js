@@ -7,6 +7,9 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { checkAndUpdateOffers } from './scheduleTasks.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -15,7 +18,9 @@ const corsOptions = {
   origin: ["http://167.88.39.189:3000", "http://localhost:3000"],
   credentials:true,
   methods:["GET","POST","PUT","DELETE","OPTIONS"],
-  allowedHeaders:["Content-Type","Authorization","Access-Control-Allow-Credentials"]
+  allowedHeaders:["Content-Type","Authorization","Access-Control-Allow-Credentials"],
+  preflightContinue: true,
+  optionsSuccessStatus: 204
 };
 
 // Agendar a tarefa para rodar a cada minuto (ajuste conforme necessário)
@@ -34,7 +39,7 @@ app.use("/api/category/", categoryRouter);
 app.options('*', cors(corsOptions));
 
 app.listen(PORT, () => {
-  console.log("Server is running on port 8000");
+  console.log("Server is running on port ${PORT}");
 });
 
 app.get("/", (req, res) => {
