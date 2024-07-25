@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
 export const checkToken = (req, res, next) => {
+    console.log("Cookies recebidos:", req.headers.cookie);  // Adicione este log
     const cookies = req.headers.cookie?.split("; ");
     const authHeader = cookies?.find(cookie => cookie.startsWith("accessToken"));
     const token = authHeader && authHeader.split("=")[1];

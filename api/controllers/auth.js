@@ -253,9 +253,8 @@ export const login = (req, res) => {
                         { algorithm: 'HS256' }
                         );
                         delete user.password;
-                        res.cookie("accessToken", token,{httpOnly:true})
-                        .cookie("refreshToken", refreshToken,{
-                            httpOnly:true})
+                        res.cookie("accessToken", token,{httpOnly:true, secure: false, sameSite: "none"})
+                        .cookie("refreshToken", refreshToken,{httpOnly:true, secure: false, sameSite: "none"})
                         .status(200).json({ 
                             msg:"Usuário logado com sucesso", 
                             user
@@ -304,9 +303,8 @@ export const login = (req, res) => {
                         { algorithm: 'HS256' }
                         );
                         delete user.password;
-                        res.cookie("accessToken", token,{httpOnly:true})
-                        .cookie("refreshToken", refreshToken,{
-                            httpOnly:true})
+                        res.cookie("accessToken", token,{httpOnly:true, secure: false, sameSite: "none"})
+                        .cookie("refreshToken", refreshToken,{httpOnly:true, secure: false, sameSite: "none"})
                         .status(200).json({ 
                             msg:"Usuário logado com sucesso", 
                             user
@@ -407,8 +405,8 @@ export const refresh = (req, res) => {
         process.env.TOKEN,
         { algorithm: 'HS256' }
         );
-        res.cookie("accessToken", token,{httpOnly:true})
-        .cookie("refreshToken", refreshToken,{httpOnly:true})
+        res.cookie("accessToken", token,{httpOnly:true, secure: false, sameSite: "none"})
+        .cookie("refreshToken", refreshToken,{httpOnly:true, secure: false, sameSite: "none"})
         .status(200).json({ 
             msg:"Token atualizado com sucesso!!",
         });
@@ -493,8 +491,8 @@ export const redefinirSenha = (req, res) => {
                             { algorithm: 'HS256' }
                             );
                             delete user.password;
-                            res.cookie("accessToken", token,{httpOnly:true})
-                            .cookie("refreshToken", refreshToken,{httpOnly:true})
+                            res.cookie("accessToken", token,{httpOnly:true, secure: false, sameSite: "none"})
+                            .cookie("refreshToken", refreshToken,{httpOnly:true, secure: false, sameSite: "none"})
                             .status(200).json({ 
                                 msg:"Senha alterada com sucesso", 
                                 user
