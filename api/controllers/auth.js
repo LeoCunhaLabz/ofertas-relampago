@@ -255,10 +255,7 @@ export const login = (req, res) => {
                         delete user.password;
                         res.cookie("accessToken", token,{httpOnly:true})
                         .cookie("refreshToken", refreshToken,{
-                            httpOnly:true,
-                            domain: 'ofertarelampago.app.br', // Define o domínio do cookie
-                            secure: false,
-                        })
+                            httpOnly:true})
                         .status(200).json({ 
                             msg:"Usuário logado com sucesso", 
                             user
@@ -309,9 +306,7 @@ export const login = (req, res) => {
                         delete user.password;
                         res.cookie("accessToken", token,{httpOnly:true})
                         .cookie("refreshToken", refreshToken,{
-                            httpOnly:true,
-                            domain: 'ofertarelampago.app.br', // Define o domínio do cookie
-                            secure: false,})
+                            httpOnly:true})
                         .status(200).json({ 
                             msg:"Usuário logado com sucesso", 
                             user
@@ -413,11 +408,7 @@ export const refresh = (req, res) => {
         { algorithm: 'HS256' }
         );
         res.cookie("accessToken", token,{httpOnly:true})
-        .cookie("refreshToken", refreshToken,{
-            httpOnly:true,
-            domain: 'ofertarelampago.app.br', // Define o domínio do cookie
-            secure: false,
-        })
+        .cookie("refreshToken", refreshToken,{httpOnly:true})
         .status(200).json({ 
             msg:"Token atualizado com sucesso!!",
         });
@@ -503,10 +494,7 @@ export const redefinirSenha = (req, res) => {
                             );
                             delete user.password;
                             res.cookie("accessToken", token,{httpOnly:true})
-                            .cookie("refreshToken", refreshToken,{httpOnly:true,
-                                domain: 'ofertarelampago.app.br', // Define o domínio do cookie
-                                secure: false,
-                            })
+                            .cookie("refreshToken", refreshToken,{httpOnly:true})
                             .status(200).json({ 
                                 msg:"Senha alterada com sucesso", 
                                 user
