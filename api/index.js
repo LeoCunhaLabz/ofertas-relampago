@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 const corsOptions = {
-  origin: ["https://167.88.39.189:3000", "https://localhost:3000", "https://ofertarelampago.app.br", "https://www.ofertarelampago.app.br"],
+  origin: ["https://167.88.39.189:3000", "https://localhost:3000", "https://ofertarelampago.app.br", "https://www.ofertarelampago.app.br, https://api.ofertarelampago.app.br"],
   credentials:true,
   methods:["GET","POST","PUT","DELETE","OPTIONS"],
   allowedHeaders:["Content-Type","Authorization","Access-Control-Allow-Credentials"],
