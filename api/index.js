@@ -39,6 +39,15 @@ app.use(cookieParser());
 
 app.options('*', cors(corsOptions));
 
+// Middleware para adicionar cabeçalhos CORS em todas as respostas
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  next();
+});
+
 app.use("/api/auth/", authRouter);
 app.use("/api/post/", postRouter);
 app.use("/api/upload/", uploadRouter);
