@@ -15,7 +15,7 @@ export const createPost = async (req, res) => {
             console.log(error);
             return res.status(500).json({ message: "Erro ao verificar saldo." });
         }
-        if (data[0].moedas < 40) {
+        if (data[0].moedas < 1) {
             return res.status(400).json({ message: "Saldo insuficiente." });
         } else {
             try {
