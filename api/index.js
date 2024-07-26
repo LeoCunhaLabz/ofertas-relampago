@@ -19,7 +19,7 @@ const corsOptions = {
     "https://167.88.39.189:3000", 
     "https://localhost:3000", 
     "https://ofertarelampago.app.br", 
-    "https://www.ofertarelampago.app.br", 
+    "https://www.ofertarelampago.app.br",
     "https://api.ofertarelampago.app.br"
   ],
   credentials:true,
