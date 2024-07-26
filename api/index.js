@@ -15,7 +15,13 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 const corsOptions = {
-  origin: ["https://167.88.39.189:3000", "https://localhost:3000", "https://ofertarelampago.app.br", "https://www.ofertarelampago.app.br", "https://api.ofertarelampago.app.br"],
+  origin: [
+    "https://167.88.39.189:3000", 
+    "https://localhost:3000", 
+    "https://ofertarelampago.app.br", 
+    "https://www.ofertarelampago.app.br", 
+    "https://api.ofertarelampago.app.br"
+  ],
   credentials:true,
   methods:["GET","POST","PUT","DELETE","OPTIONS"],
   allowedHeaders:["Content-Type","Authorization","Access-Control-Allow-Credentials"],
@@ -31,12 +37,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
+app.options('*', cors(corsOptions));
+
 app.use("/api/auth/", authRouter);
 app.use("/api/post/", postRouter);
 app.use("/api/upload/", uploadRouter);
 app.use("/api/category/", categoryRouter);
 
-app.options('*', cors(corsOptions));
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
