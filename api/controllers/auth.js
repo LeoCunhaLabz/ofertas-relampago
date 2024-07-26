@@ -303,8 +303,8 @@ export const login = (req, res) => {
                         { algorithm: 'HS256' }
                         );
                         delete user.password;
-                        res.cookie("accessToken", token,{httpOnly:true, secure: false, sameSite: "none"})
-                        .cookie("refreshToken", refreshToken,{httpOnly:true, secure: false, sameSite: "none"})
+                        res.cookie("accessToken", token,{httpOnly:true, secure: true, sameSite: "none"})
+                        .cookie("refreshToken", refreshToken,{httpOnly:true, secure: true, sameSite: "none"})
                         .status(200).json({ 
                             msg:"Usuário logado com sucesso", 
                             user
@@ -405,8 +405,8 @@ export const refresh = (req, res) => {
         process.env.TOKEN,
         { algorithm: 'HS256' }
         );
-        res.cookie("accessToken", token,{httpOnly:true, secure: false, sameSite: "none"})
-        .cookie("refreshToken", refreshToken,{httpOnly:true, secure: false, sameSite: "none"})
+        res.cookie("accessToken", token,{httpOnly:true, secure: true, sameSite: "none"})
+        .cookie("refreshToken", refreshToken,{httpOnly:true, secure: true, sameSite: "none"})
         .status(200).json({ 
             msg:"Token atualizado com sucesso!!",
         });
@@ -418,8 +418,8 @@ export const refresh = (req, res) => {
 
 export const logout = (req, res) => {
     return res
-    .clearCookie("accessToken", { secure: false, sameSite: "none" })
-    .clearCookie("refreshToken", { secure: false, sameSite: "none" })
+    .clearCookie("accessToken", { secure: true, sameSite: "none" })
+    .clearCookie("refreshToken", { secure: true, sameSite: "none" })
     .status(200)
     .json({ msg: "Usuário deslogado com sucesso!" });
 };
@@ -491,8 +491,8 @@ export const redefinirSenha = (req, res) => {
                             { algorithm: 'HS256' }
                             );
                             delete user.password;
-                            res.cookie("accessToken", token,{httpOnly:true, secure: false, sameSite: "none"})
-                            .cookie("refreshToken", refreshToken,{httpOnly:true, secure: false, sameSite: "none"})
+                            res.cookie("accessToken", token,{httpOnly:true, secure: true, sameSite: "none"})
+                            .cookie("refreshToken", refreshToken,{httpOnly:true, secure: true, sameSite: "none"})
                             .status(200).json({ 
                                 msg:"Senha alterada com sucesso", 
                                 user
