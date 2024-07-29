@@ -5,23 +5,24 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useState } from 'react'
-import { makeRequest } from '../../../../../axios'
+import { makeRequest } from '@/../../axios';
 import { Success } from '@/components/ui/success'
+import React from 'react'
 
 export const Form = () => {
 
 
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const user_type = "cliente"
   
   const handleRecoverPassword = (e:any) => {
     e.preventDefault();
     setError('');
-    makeRequest.post("auth/resetpassword", {password, confirmPassword}).then((res) => {
+    makeRequest.post("auth/forgotpassword", {user_type, email}).then((res) => {
       console.log(res.data)
-      setSuccess(res.data.message || "Senha redefinida com sucesso!")
+      setSuccess(res.data.message || "Email de redefinição enviado com sucesso!")
       setError(''); 
     }).catch((err)=>{
       if(err.response) {
@@ -36,25 +37,14 @@ export const Form = () => {
   return (
     <form className="space-y-12 sm:w-[400px]" onSubmit={(e)=>handleRecoverPassword(e)}>
       <div className="grid w-full items-center gap-1.5">
-        <Label htmlFor="password">Senha</Label>
+        <Label htmlFor="Email">Email Cadastrado</Label>
         <Input
           className="w-full"
           required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          id="password"
-          type="password"
-        />
-      </div>
-      <div className="grid w-full items-center gap-1.5">
-        <Label htmlFor="confirmPassword">Confirmar Senha</Label>
-        <Input
-          className="w-full"
-          required
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          id="confirmPassword"
-          type="password"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          id="email"
+          type="email"
         />
       </div>
       {error && <Alert>{error}</Alert>}

@@ -322,8 +322,8 @@ export const login = (req, res) => {
 export const esqueciSenha = (req, res) => {
     const { user_type, email } = req.body;
 
-    if (!email) {
-        return res.status(400).json({ message: "Por favor, preencha todos os campos." });
+    if (!email || !user_type) {
+        return res.status(400).json({ message: "Por favor, preencha todos os campos corretamente." });
     }
 
     if (user_type == "anunciante") {
@@ -340,23 +340,28 @@ export const esqueciSenha = (req, res) => {
                 } else {
                     const user = data[0];
                     const resetToken = jwt.sign(
-                        {id: user.id, email: user.email },
+                        {id: user.id, email: user.email, user_type: "anunciante" },
                         process.env.TOKEN,
                         { expiresIn: "1h" }
                     );
+                    
                     transporter.sendMail({
                         from: 'Ofertas Relâmpago <naoresponda@ofertasrelampago.com>',
                         to: email,
                         subject: 'Redefinição de Senha',
                         text: `Você solicitou a redefinição de senha. Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo: http://ofertasrelampago.com/redefinir-senha/${resetToken}`,
                         html: `<p>Você solicitou a redefinição de senha.</p><p>Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo:</p><a href="http://ofertas.com/redefinir-senha/${resetToken}">Redefinir Senha</a>`
-                    });
+                    },
+                    (error, info) => {
+                        if (error) {
+                            console.log(error);
+                            return res.status(500).json({ message: "Erro ao enviar email de recuperação." });
+                        } else {
                     return res.status(200).json({ message: "Email de recuperação enviado com sucesso!" });
                 }
-            }
-        )         
-    }
-    else if (user_type == "cliente") {
+            })     
+    }})
+    } else if (user_type == "cliente") {
         db.query(
             "SELECT * FROM clientes WHERE email = ?", 
             [email], 
@@ -368,10 +373,29 @@ export const esqueciSenha = (req, res) => {
                 if (data.length === 0) {
                     return res.status(404).json({ message: "Usuário não encontrado." });
                 } else {
-                    return res.status(200).json({ message: "Email enviado com sucesso!" });
+                    const user = data[0];
+                    const resetToken = jwt.sign(
+                        {id: user.id, email: user.email, user_type: "cliente" },
+                        process.env.TOKEN,
+                        { expiresIn: "1h" }
+                    );
+                    
+                    transporter.sendMail({
+                        from: 'Ofertas Relâmpago <naoresponda@ofertasrelampago.com>',
+                        to: email,
+                        subject: 'Redefinição de Senha',
+                        text: `Você solicitou a redefinição de senha. Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo: http://ofertasrelampago.com/redefinir-senha/${resetToken}`,
+                        html: `<p>Você solicitou a redefinição de senha.</p><p>Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo:</p><a href="http://ofertas.com/redefinir-senha/${resetToken}">Redefinir Senha</a>`
+                    },
+                    (error, info) => {
+                        if (error) {
+                            console.log(error);
+                            return res.status(500).json({ message: "Erro ao enviar email de recuperação." });
+                        } else {
+                    return res.status(200).json({ message: "Email de recuperação enviado com sucesso!" });
                 }
-            }
-        )         
+            })     
+    }})
     };
 }
 
@@ -614,3 +638,44 @@ export const atualizarInformação = (req, res) => {
         
     })
 }}
+
+export const redefinirSenhaLink = async (req, res) => {
+    const { token } = req.params;
+    const { newPassword, confirmNewPassword } = req.body;
+
+    if (!newPassword || !confirmNewPassword) {
+        return res.status(400).json({ message: "Por favor, preencha todos os campos." });
+    }
+
+    if (newPassword !== confirmNewPassword) {
+        return res.status(400).json({ message: "As senhas não coincidem." });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.TOKEN);
+        const hashedPassword = await bcrypt.hash(newPassword, 8);
+
+        let query = "";
+        let params = [hashedPassword, decoded.id];
+
+        if (decoded.user_type == "anunciante") {
+            query = "UPDATE anunciantes SET password = ? WHERE id = ?";
+        } else if (decoded.user_type == "cliente") {
+            query = "UPDATE clientes SET password = ? WHERE id = ?";
+        } else {
+            return res.status(403).json({ message: "Token inválido." });
+        }
+
+        db.query(query, params, (error) => {
+            if (error) {
+                console.log(error);
+                return res.status(500).json({ message: "Erro ao redefinir a senha." });
+            } else {
+                return res.status(200).json({ message: "Senha redefinida com sucesso." });
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Erro ao redefinir a senha." });
+    }
+}

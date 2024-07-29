@@ -7,21 +7,24 @@ import { Label } from '@/components/ui/label'
 import { useState } from 'react'
 import { makeRequest } from '@/../../axios';
 import { Success } from '@/components/ui/success'
+import React from 'react'
 
-export const Form = () => {
+export const Form = ({ token }: { token: string }) => {
 
 
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [newPassword, setNewPassWord] = useState('')
+  const [confirmNewPassword, setConfirmNewPassWord] = useState('')
+
   
   const handleRecoverPassword = (e:any) => {
     e.preventDefault();
     setError('');
-    makeRequest.post("auth/resetpassword", {password, confirmPassword}).then((res) => {
-      console.log(res.data)
-      setSuccess(res.data.message || "Senha redefinida com sucesso!")
+    makeRequest.post(`/redefinir-senha/${token}`, {newPassword, confirmNewPassword})
+    .then((res) => {
+      setSuccess(res.data.message || "Email de redefinição enviado com sucesso!")
       setError(''); 
     }).catch((err)=>{
       if(err.response) {
@@ -36,24 +39,24 @@ export const Form = () => {
   return (
     <form className="space-y-12 sm:w-[400px]" onSubmit={(e)=>handleRecoverPassword(e)}>
       <div className="grid w-full items-center gap-1.5">
-        <Label htmlFor="password">Senha</Label>
+        <Label htmlFor="Email">Nova Senha</Label>
         <Input
           className="w-full"
           required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={newPassword}
+          onChange={(e) => setNewPassWord(e.target.value)}
           id="password"
           type="password"
         />
       </div>
       <div className="grid w-full items-center gap-1.5">
-        <Label htmlFor="confirmPassword">Confirmar Senha</Label>
+        <Label htmlFor="Email">Repetir Nova Senha</Label>
         <Input
           className="w-full"
           required
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          id="confirmPassword"
+          value={confirmNewPassword}
+          onChange={(e) => setConfirmNewPassWord(e.target.value)}
+          id="password"
           type="password"
         />
       </div>
@@ -61,7 +64,7 @@ export const Form = () => {
       {success && <Success>{success}</Success>}
       <div className="w-full">
         <Button className="w-full" size="lg" onClick={(e)=>handleRecoverPassword(e)}>
-          Redefinir Senha
+          Definir Nova Senha
         </Button>
       </div>
     </form>
