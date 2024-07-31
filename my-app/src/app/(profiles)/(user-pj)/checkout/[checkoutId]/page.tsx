@@ -7,7 +7,6 @@ import { UserContext } from '@/context/UserContext';
 import { Alert } from '@/components/ui/alert'
 import { Success } from '@/components/ui/success'
 
-
 interface OfferModel {
     checkout_id: string;
     package_name: string;
@@ -32,7 +31,7 @@ export default function CheckoutPagePJ({
     const [offers, setOffers] = useState<OfferModel[]>([]);
     let checkoutId = params.checkoutId;
     const user = useContext(UserContext);
-    const email = user?.email;
+    const email = user?.user?.email;
 
     useEffect(() => {
         const script = document.createElement('script');
@@ -40,6 +39,10 @@ export default function CheckoutPagePJ({
         script.async = true;
         script.onload = () => setPagSeguroLoaded(true);
         document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        }
     }, []);
 
     useEffect(() => {
@@ -74,33 +77,37 @@ export default function CheckoutPagePJ({
             return;
         }
 
-        const card = PagSeguro.encryptCard({
-            publicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr+ZqgD892U9/HXsa7XqBZUayPquAfh9xx4iwUbTSUAvTlmiXFQNTp0Bvt/5vK2FhMj39qSv1zi2OuBjvW38q1E374nzx6NNBL5JosV0+SDINTlCG0cmigHuBOyWzYmjgca+mtQu4WczCaApNaSuVqgb8u7Bd9GCOL4YJotvV5+81frlSwQXralhwRzGhj/A57CGPgGKiuPT+AOGmykIGEZsSD9RKkyoKIoc0OS8CPIzdBOtTQCIwrLn2FxI83Clcg55W8gkFSOS6rWNbG5qFZWMll6yl02HtunalHmUlRUL66YeGXdMDC2PuRcmZbGO5a/2tbVppW6mfSWG3NPRpgwIDAQAB",
-            holder: formData.cardName,
-            number: formData.cardNumber,
-            expMonth: formData.expireDate.split('-')[1],
-            expYear: formData.expireDate.split('-')[0],
-            securityCode: formData.cvv
-        });
+        if (window.PagSeguro) {
+            const card = window.PagSeguro.encryptCard({
+                publicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr+ZqgD892U9/HXsa7XqBZUayPquAfh9xx4iwUbTSUAvTlmiXFQNTp0Bvt/5vK2FhMj39qSv1zi2OuBjvW38q1E374nzx6NNBL5JosV0+SDINTlCG0cmigHuBOyWzYmjgca+mtQu4WczCaApNaSuVqgb8u7Bd9GCOL4YJotvV5+81frlSwQXralhwRzGhj/A57CGPgGKiuPT+AOGmykIGEZsSD9RKkyoKIoc0OS8CPIzdBOtTQCIwrLn2FxI83Clcg55W8gkFSOS6rWNbG5qFZWMll6yl02HtunalHmUlRUL66YeGXdMDC2PuRcmZbGO5a/2tbVppW6mfSWG3NPRpgwIDAQAB",
+                holder: formData.cardName,
+                number: formData.cardNumber,
+                expMonth: formData.expireDate.split('-')[1],
+                expYear: formData.expireDate.split('-')[0],
+                securityCode: formData.cvv
+            });
 
-        console.log("Card encrypted:", card);
+            console.log("Card encrypted:", card);
 
-        const encryptedCard = card.encryptedCard;
-        const hasErrors = card.hasErrors;
-        const errors = card.errors;
+            const encryptedCard = card.encryptedCard;
+            const hasErrors = card.hasErrors;
+            const errors = card.errors;
 
-        if (hasErrors) {
-            console.error(errors);
-        } else {
-            try {
-                const res = makeRequest.post(`checkout/payment/${checkoutId}`, {encryptedCard, email });
-                console.log("Pagamento realizado com sucesso:", res);
+            if (hasErrors) {
+                console.error(errors);
+            } else {
+                try {
+                    const res = makeRequest.post(`checkout/payment/${checkoutId}`, {encryptedCard, email });
+                    console.log("Pagamento realizado com sucesso:", res);
 
-            } catch (error) {
-                console.error("Erro ao realizar pagamento:", error);
+                } catch (error) {
+                    console.error("Erro ao realizar pagamento:", error);
+                }
             }
+        } else {
+            console.error("PagSeguro SDK not loaded yet.");
         }
-    };
+    }
 
     return (
         <main className="mt-10 flex flex-wrap justify-center md:justify-between">
