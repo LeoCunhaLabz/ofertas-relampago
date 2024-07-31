@@ -43,6 +43,7 @@ export type User = Anunciante | Cliente | undefined;
 
 
 interface UserContextType {
+    email: any;
     latitude: any;
     longitude: any;
     user: User;
