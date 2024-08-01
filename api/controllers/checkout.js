@@ -90,7 +90,7 @@ export const payment = async (req, res) => {
                 }
               ],
               notification_urls: [
-                'https://api.ofertarelampago.app.br/api/checkout/webhook'
+                'https://api.ofertarelampago.app.br/api/checkout/webhook/'
               ],
             }
           };
@@ -117,29 +117,34 @@ export const webhook = async (req, res) => {
   const { notificationCode, notificationType, token_api } = req.body;
 
     if (notificationType !== 'transaction') {
-        return res.status(400).json({ message: 'Tipo de notificação inválido' });
+        return res.status(401).json({ message: 'Tipo de notificação inválido' });
     }
 
     try {
         const pagseguro_url = `${process.env.PAGSEGURO_WEBHOOK}/v3/transactions/notifications/${notificationCode}?email=${process.env.PAGSEGURO_EMAIL}&token=${process.env.PAGSEGURO_TOKEN}`;
         
-        const response = await axios.get(pagseguro_url);
-        const transaction = response.data.response;
+        const response = await axios.get(pagseguro_url, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        const transaction = response.data;
 
-        if (transaction.status === '3' || transaction.status === '4') { // 3 = Pago, 4 = Disponível
-            const userId = transaction.body.reference_id.split('_')[1];
-            const creditsToAdd = transaction.items[0].quantity;
-            console.log('Créditos a adicionar:', creditsToAdd, 'para o usuário:', userId);
+        const status = transaction.status;
+        const reference_id = transaction.reference_id;
+        const userId = reference_id.split('_')[1];
+        const creditsToAdd = transaction.items[0].quantity;
 
-            // Atualizar créditos do usuário no banco de dados
-            await db.query("UPDATE anunciantes SET moedas = moedas + ? WHERE id = ?", [creditsToAdd, userId]);
+        if (status === '3' || status === '4') { // 3 = Pago, 4 = Disponível
+          // Atualizar créditos do usuário no banco de dados
+          await db.query("UPDATE anunciantes SET moedas = moedas + ? WHERE id = ?", [creditsToAdd, userId]);
 
-            return res.status(200).json({ message: 'Créditos adicionados com sucesso' });
+            return res.status(201).json({ message: 'Créditos adicionados com sucesso' });
         } else {
-            return res.status(200).json({ message: 'Transação não está paga' });
+            return res.status(202).json({ message: 'Transação não está paga' });
         }
     } catch (error) {
         console.error('Erro ao processar notificação:', error);
-        return res.status(500).json({ message: 'Erro Interno' });
+        return res.status(505).json({ message: 'Erro Interno' });
     }
 }
