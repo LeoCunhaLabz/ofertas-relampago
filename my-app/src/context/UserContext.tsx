@@ -37,6 +37,8 @@ interface Cliente {
     endereco: string;
     latitude: string;
     longitude: string;
+    nome_comercial: string;
+    cnpj: string;
 }
 
 export type User = Anunciante | Cliente | undefined;
