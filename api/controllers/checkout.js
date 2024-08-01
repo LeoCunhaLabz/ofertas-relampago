@@ -132,7 +132,7 @@ export const webhook = async (req, res) => {
             console.log('Créditos a adicionar:', creditsToAdd, 'para o usuário:', userId);
 
             // Atualizar créditos do usuário no banco de dados
-            await db.query("UPDATE anunciantes SET credits = credits + ? WHERE id = ?", [creditsToAdd, userId]);
+            await db.query("UPDATE anunciantes SET moedas = moedas + ? WHERE id = ?", [creditsToAdd, userId]);
 
             return res.status(200).json({ message: 'Créditos adicionados com sucesso' });
         } else {
