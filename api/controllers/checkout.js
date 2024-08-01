@@ -124,10 +124,10 @@ export const webhook = async (req, res) => {
         const pagseguro_url = `${process.env.PAGSEGURO_WEBHOOK}/v3/transactions/notifications/${notificationCode}?email=${process.env.PAGSEGURO_EMAIL}&token=${process.env.PAGSEGURO_TOKEN}`;
         
         const response = await axios.get(pagseguro_url);
-        const transaction = response.data;
+        const transaction = response.data.response;
 
         if (transaction.status === '3' || transaction.status === '4') { // 3 = Pago, 4 = Disponível
-            const userId = transaction.reference_id.split('_')[1];
+            const userId = transaction.body.reference_id.split('_')[1];
             const creditsToAdd = transaction.items[0].quantity;
             console.log('Créditos a adicionar:', creditsToAdd, 'para o usuário:', userId);
 
