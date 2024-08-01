@@ -113,27 +113,12 @@ export const payment = async (req, res) => {
     }
 }
 
-const waitForNotificationCode = async (req, interval = 1000, maxAttempts = 30) => {
-  let attempts = 0;
-  while (attempts < maxAttempts) {
-    const { notificationCode } = req.body;
-    if (notificationCode) {
-      return notificationCode;
-    }
-    await new Promise(resolve => setTimeout(resolve, interval));
-    attempts++;
-  }
-  throw new Error('notificationCode não foi gerado a tempo');
-};
-
 export const webhook = async (req, res) => {
-  const { notificationCode, notificationType, token_api } = req.body;
+  const { notificationCode, notificationType } = req.body;
 
-  console.log('Recebido webhook:', { notificationCode, notificationType, token_api });
+  console.log('Recebido webhook:', { notificationCode, notificationType });
 
     try {
-        const notificationCode = await waitForNotificationCode(req);
-
         const pagseguro_url = `${process.env.PAGSEGURO_WEBHOOK}v3/transactions/notifications/${notificationCode}?email=${process.env.PAGSEGURO_EMAIL}&token=${process.env.PAGSEGURO_TOKEN}`;
         
         const response = await axios.get(pagseguro_url, {
