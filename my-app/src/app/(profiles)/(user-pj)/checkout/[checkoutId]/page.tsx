@@ -7,6 +7,7 @@ import { UserContext } from '@/context/UserContext';
 import { Alert } from '@/components/ui/alert'
 import { Success } from '@/components/ui/success'
 import { useRouter } from 'next/navigation';
+import { Header } from '@/components/HeaderPJ';
 
 interface OfferModel {
     checkout_id: string;
@@ -109,15 +110,17 @@ export default function CheckoutPagePJ({
                     console.log(res);
                     
                     const status = res.data.charges[0].status;
+                    const transactionId = res.data.id;
+                    const chargeId = res.data.charges[0].id;
                     
                     if (status === "PAID" || status === "AUTHORIZED") {
                         setError('')
                         setSuccess("Pagamento autorizado com sucesso! Redirecionando...");
                         setIsPaymentSuccessful(true);
 
-                        //setTimeout(() => {
-                            //router.push(`/success?transactionId=${res.data.transactionId}`);
-                        //}, 3000);
+                        setTimeout(() => {
+                            router.push(`/sucesso?transactionId=${transactionId}&chargeId=${chargeId}`);
+                        }, 3000);
                     } else if (status === "DECLINED") {
                         setSuccess('')
                         setError("Pagamento não autorizado.");
@@ -129,7 +132,6 @@ export default function CheckoutPagePJ({
                     }
 
                 } catch (error) {
-                    // const error_eng= (error as any).response.data;
                     setError("Erro! Por favor, confira seus dados de cadastro. ");
                 } finally {
                 }
@@ -142,6 +144,7 @@ export default function CheckoutPagePJ({
 
     return (
         <main className="mt-10 flex flex-wrap justify-center md:justify-between">
+            <Header />
             <div className="mb-4 flex max-h-[300px] w-full max-w-[478px] flex-col gap-y-6 rounded-2xl bg-secondary p-4">
                 <Title>Resumo da Compra</Title>
                 <p className="mb-3">
