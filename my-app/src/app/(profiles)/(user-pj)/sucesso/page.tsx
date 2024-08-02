@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Title } from "@/components/Title";
 import { makeRequest } from '@/../../axios';
 import { Header } from '@/components/HeaderPJ';
@@ -23,13 +23,12 @@ interface TransactionInfo {
     card_holder_name?: string;
 }
 
-export default function useSucesso() {
+function Sucesso() {
     const [transactionInfo, setTransactionInfo] = useState<TransactionInfo>({});
     const router = useRouter();
     const searchParams = useSearchParams();
     const transactionId = searchParams.get('transactionId');
     const chargeId = searchParams.get('chargeId');
-
 
     useEffect(() => {
         const fetchTransactionInfo = async () => {
@@ -42,17 +41,15 @@ export default function useSucesso() {
                 }
             }
         };
-
         fetchTransactionInfo();
     }, [transactionId, chargeId]);
 
     const formattedOrderCreatedAt = transactionInfo?.order_created_at
-    ? format(new Date(transactionInfo.order_created_at), 'dd/MM/yyyy HH:mm')
-    : 'Data não disponível';
-
+        ? format(new Date(transactionInfo.order_created_at), 'dd/MM/yyyy HH:mm')
+        : 'Data não disponível';
     const formattedChargePaidAt = transactionInfo?.charge_paid_at
-    ? format(new Date(transactionInfo.charge_paid_at), 'dd/MM/yyyy HH:mm')
-    : 'Data não disponível'; 
+        ? format(new Date(transactionInfo.charge_paid_at), 'dd/MM/yyyy HH:mm')
+        : 'Data não disponível';
 
     return (
         <main className="mt-10 flex flex-wrap justify-center md:justify-between">
@@ -131,4 +128,12 @@ export default function useSucesso() {
             </div>
         </main>
     )
+}
+
+export default function PageWrapper() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Sucesso />
+        </Suspense>
+    );
 }
