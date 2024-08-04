@@ -2,8 +2,39 @@
 
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { Title } from '@/components/Title';
+import { useEffect, useState } from "react";
+import { NovoAnunciante } from "@/models";
+import { EventCardHome } from "@/components/EventCardHome";
+import { makeRequest } from "@/../../axios";
 
 export default function Page() {
+  const [events, setEvents] = useState<NovoAnunciante[]|undefined>(undefined);
+  
+  useEffect(() => {
+          makeRequest.post("post/get6posts", { }).then((res) => {
+              setEvents(res.data.data)
+          }).catch((err) => {
+              console.log(err)
+          })
+  },[])
+
+  // Função para converter strings de data para objetos Date
+  const parseProductDates = (product: { data_cadastro: string | number | Date; data_fim_oferta: string | number | Date; }) => ({
+      ...product,
+      data_cadastro: new Date(product.data_cadastro),
+      data_inicio_oferta: new Date(), // Add a default value for data_inicio_oferta
+      data_fim_oferta: new Date(product.data_fim_oferta),
+  });
+
+  // Convertendo datas de todos os produtos
+  const dataWithParsedDates = events?.map(parseProductDates) ?? [];
+
+  // Funções para obter os conjuntos de produtos
+  const getNearerProducts = (data: any[]) => data
+  .sort((a, b) => b.ativo - a.ativo).slice(0, 30);    
+  const nearerProducts = getNearerProducts(dataWithParsedDates);
+
 
   return (
     <section className="text-gray-400 body-font">
@@ -33,6 +64,12 @@ export default function Page() {
           ></img>
         </div>
       </div>
+      <Title className='text-black text-center'>Algumas Ofertas Exclusivas</Title>
+            <div className="justify-center my-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {nearerProducts?.map((event) => (
+                    <EventCardHome key={event.id_anuncio} event={event} />
+                ))}
+            </div>
       <Footer />
     </section>
   );

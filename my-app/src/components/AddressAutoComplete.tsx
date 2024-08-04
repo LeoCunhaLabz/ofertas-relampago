@@ -37,6 +37,13 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
     });
   };
 
+  const handleBlur = () => {
+    const inputElement = inputRef.current as unknown as HTMLInputElement;
+    const address = inputElement.value;
+    setAddress(address);
+    onSelectAddress({ address });
+  }
+
   return (
     <div className=' text-left flex h-10 w-full rounded-md border border-gray-300 bg-transparent py-2 px-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-50 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-900'>
       <Script
@@ -53,8 +60,10 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
         type="text"
         value={address}
         onChange={(e) => setAddress(e.target.value)}
+        onBlur = {handleBlur}
         placeholder="Digite seu endereço"
         style={{ width: '100%', padding: '10px' }}
+        autoComplete='off'
       />
     </div>
   );

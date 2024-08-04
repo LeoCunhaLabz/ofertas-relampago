@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { Success } from '@/components/ui/success'
 import { makeRequest } from '@/../../axios';
 import { AddressAutocomplete } from '@/components/AddressAutoComplete'
+import React from 'react'
 
 export const Form = () => {
   const [userType, setUserType] = useState('cliente')
@@ -162,7 +163,10 @@ export const Form = () => {
           </div>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="storeAddress">Endereço</Label>
-            <AddressAutocomplete value={formData.endereco} onSelectAddress={handleSelectAddress} />
+            <AddressAutocomplete 
+            value={formData.endereco} 
+            onSelectAddress={handleSelectAddress}
+            />
           </div>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="password">Senha</Label>

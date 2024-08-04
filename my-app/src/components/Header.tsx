@@ -15,9 +15,7 @@ export function Header() {
             href="/"
             className="text-lg font-semibold rounded-lg tracking-widest focus:outline-none focus:shadow-outline"
           >
-            <h1 className="text-4xl Avenir tracking-tighter text-gray-900 md:text-4x1 lg:text-3xl">
-              LOGO
-            </h1>
+            <Image src='/logo_oferta_relampago.png' alt='Logotipo' height={75} width={100} />
           </a>
           {/* Mobile menu button */}
           <button
