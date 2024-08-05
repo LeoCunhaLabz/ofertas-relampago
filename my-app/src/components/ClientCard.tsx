@@ -23,9 +23,11 @@ export function EventCard(props: EventCardProps) {
                             })}
                         </p>
                         <p className="text-xl font-bold text-gray-800 mr-2 ">{props.event.nome_completo}</p>
+{/*
                         <div className="flex items-center">
                             <p className="font-semibold">CPF: {props.event.cpf}</p>
                         </div>
+*/}
                     </div>
                 </div>
                 { /*</Link> */}

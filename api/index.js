@@ -61,5 +61,5 @@ app.listen(PORT, () => {
 });
 
 app.get("/", (req, res) => {
-  res.send(`Aplicação em Node.JS`)
+  res.send(`Aplicação Funcionando perfeitamente`)
 })

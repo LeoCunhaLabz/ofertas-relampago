@@ -215,15 +215,6 @@ const Settings = () => {
                   </div> 
                 </div> */}
                 <div className="grid items-center gap-1.5">
-                  <Label htmlFor="cpf">CPF</Label>
-                  <Input
-                    id="cpf"
-                    type="text"
-                    value={formData.cpf}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="grid items-center gap-1.5">
                   <Label htmlFor="nome_completo">Nome</Label>
                   <Input
                     id="nome_completo"
@@ -251,12 +242,17 @@ const Settings = () => {
                 </div>
                 <div className="grid items-center gap-1.5">
                   <Label htmlFor="genero">Gênero</Label>
-                  <Input
+                  <select
                     id="genero"
-                    type="text"
                     value={formData.genero}
-                    onChange={handleInputChange}                    
-                  />
+                    onChange={handleInputChange}
+                    className="" // Adicione a classe CSS apropriada para estilização
+                  >
+                    <option value="">Selecione</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Feminino">Feminino</option>
+                    <option value="Outros">Outros</option>
+                  </select>
                 </div>
                 <div className="grid items-center gap-1.5">
                   <Label htmlFor="celular">Celular</Label>

@@ -79,17 +79,6 @@ export const Form = () => {
       {userType === 'anunciante' && (
         <>
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="cnpj">Nome de Usuário</Label>
-            <Input
-              className="w-full"
-              required
-              value={formData.username}
-              onChange={handleInputChange}
-              id="username"
-              type="text"
-            />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="cnpj">CNPJ</Label>
             <Input
               className="w-full"

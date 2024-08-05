@@ -74,7 +74,7 @@ export const Form = () => {
       }
     })}
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target
     setFormData((prevData) => ({ ...prevData, [id]: value }))
   }
@@ -85,17 +85,6 @@ export const Form = () => {
       {userType === 'cliente' && (
         <>
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="fullName">Nome de Usuário</Label>
-            <Input
-              className="w-full"
-              required
-              value={formData.username}
-              onChange={handleInputChange}
-              id="username"
-              type="text"
-            />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="fullName">Nome Completo</Label>
             <Input
               className="w-full"
@@ -103,17 +92,6 @@ export const Form = () => {
               value={formData.nomeCompleto}
               onChange={handleInputChange}
               id="nomeCompleto"
-              type="text"
-            />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="cpf">CPF</Label>
-            <Input
-              className="w-full"
-              required
-              value={formData.cpf}
-              onChange={handleInputChange}
-              id="cpf"
               type="text"
             />
           </div>
@@ -130,14 +108,18 @@ export const Form = () => {
           </div>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="gender">Gênero</Label>
-            <Input
-              className="w-full"
+            <select
+              className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent py-2 px-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-50 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-900"
               required
               value={formData.genero}
               onChange={handleInputChange}
               id="genero"
-              type="text"
-            />
+            >
+              <option value="">Selecione</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Feminino">Feminino</option>
+              <option value="Outros">Outros</option>
+            </select>
           </div>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="phone">Celular</Label>

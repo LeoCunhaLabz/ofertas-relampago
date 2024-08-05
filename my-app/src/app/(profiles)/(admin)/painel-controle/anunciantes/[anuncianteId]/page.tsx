@@ -66,7 +66,6 @@ export default function DetalhesOferta({
                                 <p className="text-sm">Data de cadastro: {anunciante?.data_cadastro ? format(new Date(anunciante.data_cadastro), 'dd/MM/yyyy', { locale: ptBR }) : 'Data não disponível'}</p>                            </div>
                             <div>
                                 <p className="text-xl font-normal mb-2">CNPJ: {anunciante?.cnpj}</p>
-                                <p className="text-xl font-normal mb-2">Nome de Usuário: {anunciante?.username}</p>
                                 <p className="text-xl font-normal mb-2">Razão Social: {anunciante?.razao_social}</p>
                                 <p className="text-xl font-normal mb-2">Email: {anunciante?.email}</p>
                                 <p className="text-xl font-normal mb-2">Endereço: {anunciante?.endereco}</p>

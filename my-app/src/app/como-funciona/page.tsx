@@ -13,7 +13,7 @@ export default function Page() {
           Ofertas incríveis, todos os dias.
         </h1>
         <h1 className="mb-8 text-2xl Avenir font-semibold text-gray-600 text-center">
-          Acesse promoções incríveis de mercados próximos sem sair do seu celular.
+          Acesse promoções incríveis de mercados, serviços e lojas próximas sem sair do seu celular.
         </h1>
         <div className="container flex flex-col items-center justify-center mx-auto rounded-lg ">
           <img
