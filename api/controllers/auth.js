@@ -121,7 +121,7 @@ export const register = (req, res) => {
     } else if (user_type == "cliente") {
 
         // Verificar se os campos obrigatórios foram preenchidos
-        if (!username || !email || !password || !confirmPassword || !cpf || !nome_completo || !nascimento || !genero || !celular || !endereco) {
+        if (!email || !password || !confirmPassword || !nome_completo || !nascimento || !genero || !celular || !endereco) {
             return res.status(400).json({ message: "Por favor, preencha todos os campos." });
         }
 
@@ -180,7 +180,6 @@ export const register = (req, res) => {
                                 html: `<p>Um novo USUÁRIO foi cadastrado com as seguintes informações:</p>
                                        <ul>
                                          <li>Nome Completo: ${nome_completo}</li>
-                                         <li>CPF: ${cpf}</li>
                                          <li>Data de Nascimento: ${nascimento}</li>
                                          <li>Gênero: ${genero}</li>
                                          <li>Celular: ${celular}</li>
@@ -679,3 +678,12 @@ export const redefinirSenhaLink = async (req, res) => {
         return res.status(500).json({ message: "Erro ao redefinir a senha." });
     }
 }
+
+export const getPublicKey = (req, res) => {
+    const publicKey = process.env.PAGSEGURO_PUBLIC_KEY;
+    if (publicKey) {
+        res.status(200).json({ publicKey });
+    } else {
+        res.status(500).json({ message: 'Public key not found' });
+    }
+};

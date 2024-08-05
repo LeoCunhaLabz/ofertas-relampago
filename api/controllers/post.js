@@ -158,6 +158,18 @@ export const createPost = async (req, res) => {
             
     })}};
 
+    export const get6Posts = (req, res) => {
+        const {} = req.body;
+        db.query("SELECT * FROM anuncios WHERE ativo = 1 ORDER BY data_cadastro DESC LIMIT 6", (error, data) => {
+            if (error) {
+                console.log(error);
+                return res.status(500).json({ message: "Erro ao buscar posts." });
+            }else if (data) {
+                return res.status(200).json({ data })
+            }
+        });
+    }
+
     export const getPostHomepage = (req, res) => {
         const { email, latitude, longitude } = req.body;
         db.query(

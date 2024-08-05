@@ -9,6 +9,17 @@ const offers = [
     // Adicione mais ofertas conforme necessário
 ];
 
+const addCredits = async (userId, creditsToAdd) => {
+  try {
+    await db.query("UPDATE anunciantes SET moedas = moedas + ? WHERE id = ?", [creditsToAdd, userId]);
+    console.log('Créditos adicionados com sucesso');
+    return true;
+  } catch (error) {
+    console.error('Erro ao adicionar créditos:', error);
+    return false;
+  }
+}
+
 export const seeOffers = async (req, res) => {
 	const { checkoutId } = req.params;
 
@@ -89,17 +100,77 @@ export const payment = async (req, res) => {
                   }
                 }
               ],
-              notification_urls: [
-                'https://api.ofertarelampago.app.br/api/checkout/webhook/'
-              ],
             }
           };
-          
           axios
           .request(options)
           .then(function (response) {
-            console.log(response.data.charges[0].status)  
-            return res.status(200).json(response.data);
+            const charge = response.data.charges[0];
+            console.log(charge.status)
+
+            if (charge.status === 'PAID' || charge.status === 'AUTHORIZED') {
+              const creditsAdded = addCredits(user_id, credits);
+
+              const insertQuery = `
+                          INSERT INTO compra_creditos (
+                              id_anunciante, 
+                              pagseguro_id, 
+                              my_reference_id, 
+                              order_created_at, 
+                              customer_name, 
+                              customer_email, 
+                              customer_tax_id, 
+                              item_name, 
+                              item_quantity, 
+                              item_unit_amount, 
+                              charge_id, 
+                              charge_status, 
+                              charge_paid_at, 
+                              payment_method_type, 
+                              card_brand, 
+                              card_last_digits, 
+                              card_holder_name, 
+                              message 
+                          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                      `;
+
+              const id_anunciante = user_id;
+              let message = '';
+              
+              if (creditsAdded) {
+                message = 'Créditos adicionados com sucesso';
+              } else {
+                message = 'Pago, mas houve erro ao adicionar créditos'
+              }
+
+              const insertValues = [
+                id_anunciante, 
+                response.data.id, 
+                response.data.reference_id, 
+                response.data.created_at,  
+                response.data.customer.name, 
+                response.data.customer.email, 
+                response.data.customer.tax_id, 
+                response.data.items[0].name, 
+                response.data.items[0].quantity, 
+                response.data.items[0].unit_amount, 
+                charge.id, 
+                charge.status, 
+                charge.paid_at, 
+                charge.payment_method.type, 
+                charge.payment_method.card.brand, 
+                charge.payment_method.card.last_digits, 
+                charge.payment_method.card.holder.name, 
+                message, 
+              ];
+
+              db.query(insertQuery, insertValues);
+
+              return res.status(200).json(response.data)
+
+            } else {
+            return res.status(201).json(response.data);
+            }
           })
           .catch(function (error) {
             res.status(400).json(error.response.data.error_messages[0].description);
@@ -113,37 +184,22 @@ export const payment = async (req, res) => {
     }
 }
 
-export const webhook = async (req, res) => {
-  const { notificationCode, notificationType } = req.body;
+export const retrieve = async (req, res) => {
+  const { transactionId, chargeId } = req.body;
 
-  console.log('Recebido webhook:', { notificationCode, notificationType });
-
-    try {
-        const pagseguro_url = `${process.env.PAGSEGURO_WEBHOOK}v3/transactions/notifications/${notificationCode}?email=${process.env.PAGSEGURO_EMAIL}&token=${process.env.PAGSEGURO_TOKEN}`;
-        
-        const response = await axios.get(pagseguro_url, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        console.log('Resposta da API do PagSeguro:', response.data);
-        const transaction = response.data;
-
-        const status = transaction.status;
-        const reference_id = transaction.reference_id;
-        const userId = reference_id.split('_')[1];
-        const creditsToAdd = transaction.items[0].quantity;
-
-        if (status === '3' || status === '4') { // 3 = Pago, 4 = Disponível
-          // Atualizar créditos do usuário no banco de dados
-          await db.query("UPDATE anunciantes SET moedas = moedas + ? WHERE id = ?", [creditsToAdd, userId]);
-
-            return res.status(201).json({ message: 'Créditos adicionados com sucesso' });
+  try {
+    const rows = await db.query(
+      'SELECT * FROM compra_creditos WHERE pagseguro_id = ? AND charge_id = ?', 
+      [transactionId, chargeId],(err, result) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
         } else {
-            return res.status(202).json({ message: 'Transação não está paga' });
+          return res.status(200).json(result[0]);
         }
-    } catch (error) {
-        console.error('Erro ao processar notificação:', error);
-        return res.status(505).json({ message: 'Erro Interno' });
-    }
+      }
+    );
+  } catch (error) {
+    console.error('Erro ao buscar transação:', error);
+    res.status(500).json({ message: 'Erro ao buscar transação' });
+  }
 }

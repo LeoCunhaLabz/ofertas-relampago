@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login, esqueciSenha, redefinirSenha, refresh, logout, atualizarInformação, redefinirSenhaLink } from "../controllers/auth.js";
+import { register, login, esqueciSenha, redefinirSenha, refresh, logout, atualizarInformação, redefinirSenhaLink, getPublicKey } from "../controllers/auth.js";
 import { checkRefreshToken } from "../middleware/refreshTokenValidation.js";
 import { checkToken } from "../middleware/tokenValidation.js";
 
@@ -13,5 +13,6 @@ router.post('/register', register);
 router.post('/updatepassword', checkToken, redefinirSenha);
 router.post('/updateinformation', checkToken, atualizarInformação);
 router.post('/redefinir-senha/:token', redefinirSenhaLink);
+router.get('/public-key', getPublicKey);
 
 export default router;
