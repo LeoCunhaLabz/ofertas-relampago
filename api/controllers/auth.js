@@ -12,10 +12,11 @@ let user_type = "anunciante";
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,  
     port:process.env.EMAIL_PORT,
+    secure: false,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
-    }
+    },
 })
 
 async function geocodeAddress(address) {
@@ -38,7 +39,7 @@ export const register = (req, res) => {
     if (user_type == "anunciante") {
 
         // Verificar se os campos obrigatórios foram preenchidos
-        if (!username || !email || !password || !confirmPassword || !cnpj || !razao_social || !nome_comercial || !endereco) {
+        if (!email || !password || !confirmPassword || !cnpj || !razao_social || !nome_comercial || !endereco) {
             return res.status(400).json({ message: "Por favor, preencha todos os campos." });
         }
 
@@ -89,7 +90,7 @@ export const register = (req, res) => {
                             return res.status(500).json({ message: "Erro ao registrar o usuário." });
                         } else {
                             transporter.sendMail({
-                                from: 'Ofertas Relâmpago <naoresponda@ofertasrelampago.com>',
+                                from: 'Ofertas Relampago <contato@ofertasrelampago.com>',
                                 to:'leonardovalcesio@gmail.com',
                                 subject:'Ofertas Relâmpago - Novo Anunciante cadastrado',
                                 text: `Um novo ANUNCIANTE foi cadastrado com as seguintes informações:\nNome Comercial: ${nome_comercial}\nCNPJ: ${cnpj}\nRazão Social: ${razao_social}\nE-mail: ${email}\nEndereço: ${endereco}`, // Corpo do e-mail em texto plano
@@ -173,7 +174,7 @@ export const register = (req, res) => {
                             return res.status(500).json({ message: "Erro ao registrar o usuário." });
                         } else {
                             transporter.sendMail({
-                                from: 'Ofertas Relâmpago <naoresponda@ofertasrelampago.com>',
+                                from: 'Ofertas Relampago <contato@ofertasrelampago.com>',
                                 to:'leonardovalcesio@gmail.com',
                                 subject:'Ofertas Relâmpago - Novo Usuário cadastrado',
                                 text: `Um novo USUÁRIO foi cadastrado com as seguintes informações:\nNome Comercial: ${nome_comercial}\nCNPJ: ${cnpj}\nRazão Social: ${razao_social}\nE-mail: ${email}\nEndereço: ${endereco}`, // Corpo do e-mail em texto plano
@@ -345,7 +346,7 @@ export const esqueciSenha = (req, res) => {
                     );
                     
                     transporter.sendMail({
-                        from: 'Ofertas Relâmpago <naoresponda@ofertasrelampago.com>',
+                        from: 'Ofertas Relampago <contato@ofertasrelampago.com>',
                         to: email,
                         subject: 'Redefinição de Senha',
                         text: `Você solicitou a redefinição de senha. Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo: http://ofertasrelampago.com/redefinir-senha/${resetToken}`,
@@ -380,7 +381,7 @@ export const esqueciSenha = (req, res) => {
                     );
                     
                     transporter.sendMail({
-                        from: 'Ofertas Relâmpago <naoresponda@ofertasrelampago.com>',
+                        from: 'Ofertas Relampago <contato@ofertasrelampago.com>',
                         to: email,
                         subject: 'Redefinição de Senha',
                         text: `Você solicitou a redefinição de senha. Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo: http://ofertasrelampago.com/redefinir-senha/${resetToken}`,
