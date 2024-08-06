@@ -326,7 +326,7 @@ export const createPost = async (req, res) => {
                     return res.status(500).json({ message: "Erro ao aprovar anunciante." });
                 }else if (data) {
                     transporter.sendMail({
-                        from: 'Ofertas Relampago <contato@ofertasrelampago.com>',
+                        from: 'Ofertas Relampago <contato@ofertarelampago.app.br>',
                         to: email,
                         subject:'Ofertas Relâmpago - Parabéns! Sua conta foi aprovada!',
                         text: `Parabéns! Seu cadastro como ANUNCIANTE foi aprovado. Agora você pode acessar o site e fazer sua primeira postagem.`, // Corpo do e-mail em texto plano

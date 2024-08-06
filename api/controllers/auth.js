@@ -95,7 +95,7 @@ export const register = (req, res) => {
                             return res.status(500).json({ message: "Erro ao registrar o usuário." });
                         } else {
                             transporter.sendMail({
-                                from: 'Ofertas Relampago <contato@ofertasrelampago.com>',
+                                from: 'Ofertas Relampago <contato@ofertarelampago.app.br>',
                                 to:'leonardovalcesio@gmail.com',
                                 subject:'Ofertas Relâmpago - Novo Anunciante cadastrado',
                                 text: `Um novo ANUNCIANTE foi cadastrado com as seguintes informações:\nNome Comercial: ${nome_comercial}\nCNPJ: ${cnpj}\nRazão Social: ${razao_social}\nE-mail: ${email}\nEndereço: ${endereco}`, // Corpo do e-mail em texto plano
@@ -179,7 +179,7 @@ export const register = (req, res) => {
                             return res.status(500).json({ message: "Erro ao registrar o usuário." });
                         } else {
                             transporter.sendMail({
-                                from: 'Ofertas Relampago <contato@ofertasrelampago.com>',
+                                from: 'Ofertas Relampago <contato@ofertarelampago.app.br>',
                                 to:'leonardovalcesio@gmail.com',
                                 subject:'Ofertas Relâmpago - Novo Usuário cadastrado',
                                 text: `Um novo USUÁRIO foi cadastrado com as seguintes informações:\nNome Comercial: ${nome_comercial}\nCNPJ: ${cnpj}\nRazão Social: ${razao_social}\nE-mail: ${email}\nEndereço: ${endereco}`, // Corpo do e-mail em texto plano
@@ -351,10 +351,10 @@ export const esqueciSenha = (req, res) => {
                     );
                     
                     transporter.sendMail({
-                        from: 'Ofertas Relampago <contato@ofertasrelampago.com>',
+                        from: 'Ofertas Relampago <contato@ofertarelampago.app.br>',
                         to: email,
                         subject: 'Redefinição de Senha',
-                        text: `Você solicitou a redefinição de senha. Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo: http://ofertasrelampago.com/redefinir-senha/${resetToken}`,
+                        text: `Você solicitou a redefinição de senha. Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo: http://ofertarelampago.app.br/redefinir-senha/${resetToken}`,
                         html: `<p>Você solicitou a redefinição de senha.</p><p>Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo:</p><a href="http://ofertas.com/redefinir-senha/${resetToken}">Redefinir Senha</a>`
                     },
                     (error, info) => {
@@ -386,11 +386,11 @@ export const esqueciSenha = (req, res) => {
                     );
                     
                     transporter.sendMail({
-                        from: 'Ofertas Relampago <contato@ofertasrelampago.com>',
+                        from: 'Ofertas Relampago <contato@ofertarelampago.app.br>',
                         to: email,
                         subject: 'Redefinição de Senha',
-                        text: `Você solicitou a redefinição de senha. Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo: http://ofertasrelampago.com/redefinir-senha/${resetToken}`,
-                        html: `<p>Você solicitou a redefinição de senha.</p><p>Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo:</p><a href="http://ofertas.com/redefinir-senha/${resetToken}">Redefinir Senha</a>`
+                        text: `Você solicitou a redefinição de senha. Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo: http://ofertarelampago.app.br/redefinir-senha/${resetToken}`,
+                        html: `<p>Você solicitou a redefinição de senha.</p><p>Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo:</p><a href="http://ofertarelampago.app.br/redefinir-senha/${resetToken}">Redefinir Senha</a>`
                     },
                     (error, info) => {
                         if (error) {
