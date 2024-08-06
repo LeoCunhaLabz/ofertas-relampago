@@ -22,7 +22,7 @@ export const Form = ({ token }: { token: string }) => {
   const handleRecoverPassword = (e:any) => {
     e.preventDefault();
     setError('');
-    makeRequest.post(`/redefinir-senha/${token}`, {newPassword, confirmNewPassword})
+    makeRequest.post(`auth/redefinir-senha/${token}`, {newPassword, confirmNewPassword})
     .then((res) => {
       setSuccess(res.data.message || "Email de redefinição enviado com sucesso!")
       setError(''); 
