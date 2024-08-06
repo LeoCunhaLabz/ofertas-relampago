@@ -17,6 +17,11 @@ const transporter = nodemailer.createTransport({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
+    dkim: {
+        domainName: 'ofertarelampago.app.br',
+        keySelector: 'mail',
+        privateKey: process.env.DKIM_PRIVATE_KEY
+    }
 })
 
 async function geocodeAddress(address) {
