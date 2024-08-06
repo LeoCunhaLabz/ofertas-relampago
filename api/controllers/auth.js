@@ -355,7 +355,7 @@ export const esqueciSenha = (req, res) => {
                         to: email,
                         subject: 'Redefinição de Senha',
                         text: `Você solicitou a redefinição de senha. Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo: http://ofertarelampago.app.br/redefinir-senha/${resetToken}`,
-                        html: `<p>Você solicitou a redefinição de senha.</p><p>Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo:</p><a href="http://ofertas.com/redefinir-senha/${resetToken}">Redefinir Senha</a>`
+                        html: `<p>Você solicitou a redefinição de senha.</p><p>Por favor, clique no seguinte link, ou cole-o no seu navegador para completar o processo:</p><a href="http://ofertarelampago.app.br/redefinir-senha/${resetToken}">Redefinir Senha</a>`
                     },
                     (error, info) => {
                         if (error) {
