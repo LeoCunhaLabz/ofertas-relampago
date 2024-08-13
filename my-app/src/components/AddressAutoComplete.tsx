@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Script from 'next/script';
 
-export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddress: (address: string) => void, value: string }) => {
-  const [address, setAddress] = useState(value ?? '');
-  const autocompleteRef = useRef(null);
-  const inputRef = useRef(null);
+export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddress: any, value: any }) => {
+  const [address, setAddress] = useState(value || '');
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (value) {
@@ -16,7 +16,7 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
   }, [value]);
 
   const initAutocomplete = () => {
-    const inputElement = inputRef.current;
+    const inputElement = inputRef.current as unknown as HTMLInputElement;
     const autocomplete = new window.google.maps.places.Autocomplete(inputElement, {
       types: ['geocode'], // Restrict search to addresses
       componentRestrictions: { country: 'br' } // Restrict search to Brazil
@@ -38,37 +38,35 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
   };
 
   const handleBlur = () => {
-    const autocomplete = autocompleteRef.current;
-    if (autocomplete) {
-      const place = autocomplete.getPlace();
+    const inputElement = inputRef.current as unknown as HTMLInputElement;
+    const address = inputElement.value;
+
+    if (autocompleteRef.current) {
+      const place = autocompleteRef.current.getPlace();
       if (!place || !place.geometry) {
-        // Se o usuário não selecionou nenhuma sugestão, forçamos a seleção da primeira sugestão
+        // Simulate selecting the first suggestion
         const service = new window.google.maps.places.AutocompleteService();
-        service.getPlacePredictions({ input: address, types: ['geocode'], componentRestrictions: { country: 'br' } }, (predictions) => {
-          if (predictions && predictions.length > 0) {
+        service.getPlacePredictions({ input: address, types: ['geocode'], componentRestrictions: { country: 'br' } }, (predictions, status) => {
+          if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions && predictions.length > 0) {
             const firstPrediction = predictions[0];
-            const geocoder = new window.google.maps.Geocoder();
-            geocoder.geocode({ placeId: firstPrediction.place_id }, (results, status) => {
-              if (status === 'OK' && results[0]) {
-                const selectedPlace = results[0];
-                const selectedAddress = selectedPlace.formatted_address;
-                const lat = selectedPlace.geometry.location.lat();
-                const lng = selectedPlace.geometry.location.lng();
-                setAddress(selectedAddress);
-                onSelectAddress({ address: selectedAddress, lat, lng });
+            const placesService = new window.google.maps.places.PlacesService(document.createElement('div'));
+            placesService.getDetails({ placeId: firstPrediction.place_id }, (placeDetails, status) => {
+              if (status === window.google.maps.places.PlacesServiceStatus.OK && placeDetails && placeDetails.geometry) {
+                const address = placeDetails.formatted_address;
+                const lat = placeDetails.geometry.location?.lat();
+                const lng = placeDetails.geometry.location?.lng();
+                setAddress(address);
+                onSelectAddress({ address, lat, lng });
               }
             });
           }
         });
       } else {
-        const address = place.formatted_address;
-        const lat = place.geometry.location?.lat();
-        const lng = place.geometry.location?.lng();
         setAddress(address);
-        onSelectAddress({ address, lat, lng });
+        onSelectAddress({ address });
       }
     }
-  }
+  };
 
   const handleFocus = () => {
     if (inputRef.current) {
@@ -92,8 +90,8 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
         type="text"
         value={address}
         onChange={(e) => setAddress(e.target.value)}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
+        onBlur = {handleBlur}
+        onFocus = {handleFocus}
         placeholder="Digite seu endereço"
         style={{ width: '100%', padding: '10px', border: 'none', outline: 'none'  }}
         autoComplete='off'
