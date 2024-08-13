@@ -41,9 +41,71 @@ export const Form = () => {
     setFormData((prevData) => ({ ...prevData, endereco: addressData.address }))
   };
 
+  const formatPhoneNumber = (value: string) => {
+    // Remove todos os caracteres que não são dígitos
+    const cleaned = value.replace(/\D/g, '');
+  
+    // Formata o número de celular
+    const match = cleaned.match(/^(\d{0,2})(\d{0,5})(\d{0,4})(\d*)$/);
+    if (match) {
+      let formattedNumber = '';
+      if (match[1]) {
+        formattedNumber += `(${match[1]}`;
+      }
+      if (match[1] && match[1].length === 2) {
+        formattedNumber += ') ';
+      }
+      if (match[2]) {
+        formattedNumber += match[2];
+      }
+      if (match[2] && match[2].length === 5) {
+        formattedNumber += '-';
+      }
+      if (match[3]) {
+        formattedNumber += match[3];
+      }
+      if (match[4]) {
+        formattedNumber += match[4];
+      }
+      return formattedNumber;
+    }
+  
+    return cleaned;
+  };
+
   const handleRegister = (e:any) => {
     e.preventDefault();
     setError('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('As senhas não coincidem.');
+      return;
+    }
+    
+    if (!["Masculino", "Feminino", "Outros"].includes(formData.genero)) {
+      setError('Selecione uma das opções de gênero disponíveis.');
+      return;
+    }
+
+    const cleanPhoneNumber = (formattedNumber: string) => {
+      return formattedNumber.replace(/\D/g, '');
+    };
+
+    const cleanedPhoneNumber = cleanPhoneNumber(formData.celular);
+
+    const phoneRegex = /^\d+$/;
+    if (!phoneRegex.test(cleanedPhoneNumber)) {
+      setError('O número de celular deve conter apenas números.');
+      return;
+    }
+
+    if (!formData.nomeCompleto || !formData.nascimento || !formData.genero || !formData.celular) {
+      setError('Preencha todos os campos.');
+      return;
+    }
+
+
+
     const { username, email, password, confirmPassword, cnpj, razaoSocial, nomeComercial, endereco, cpf, nomeCompleto, nascimento, genero, celular } = formData;
     makeRequest.post("auth/register", {
       user_type: userType,
@@ -59,7 +121,7 @@ export const Form = () => {
       nome_completo: nomeCompleto, 
       nascimento, 
       genero, 
-      celular,
+      celular: cleanedPhoneNumber,
     }).then((res) => {
       console.log(res.data)
       setSuccess(res.data.message || "Usuário registrado com sucesso!")
@@ -76,6 +138,12 @@ export const Form = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target
+
+    if (id === 'celular') {
+      setFormData((prevData) => ({ ...prevData, [id]: formatPhoneNumber(value) }))
+      return
+    }
+
     setFormData((prevData) => ({ ...prevData, [id]: value }))
   }
 
