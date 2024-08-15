@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Script from 'next/script';
+import debounce from 'lodash.debounce';
 
 export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddress: any, value: any }) => {
   const [address, setAddress] = useState(value || '');
@@ -11,7 +12,7 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
     if (value) {
       setAddress(value);
       if (typeof window !== 'undefined' && window.google) {
-        initAutocomplete();
+        debouncedInitAutocomplete();
       }
     }
   }, [value]);
@@ -38,7 +39,9 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
     });
   };
 
-  const handleBlur = () => {
+  const debouncedInitAutocomplete = debounce(initAutocomplete, 500); // debounce delay of 300ms
+
+  const handleBlur = debounce(() => {
     const inputElement = inputRef.current as unknown as HTMLInputElement;
     const currentAddress = inputElement.value;
   
@@ -71,13 +74,17 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
         }
       }
     }
-  };  
+  }, 300); // debounce delay of 300ms  
 
   const handleFocus = () => {
     if (inputRef.current) {
       inputRef.current.select();
     }
   };
+
+  const handleChange = (value: string) => {
+    setAddress(value);
+  }
 
   return (
     <div className=' text-left flex h-10 w-full rounded-md border border-gray-300 bg-transparent py-2 px-0 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-50 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-900'>
@@ -86,7 +93,7 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
         strategy="lazyOnload"
         onLoad={() => {
           if (typeof window !== 'undefined' && window.google) {
-            initAutocomplete();
+            debouncedInitAutocomplete();
           }
         }}
       />
@@ -94,7 +101,7 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
         ref={inputRef}
         type="text"
         value={address}
-        onChange={(e) => setAddress(e.target.value)}
+        onChange={(e) => handleChange(e.target.value)}
         onBlur = {handleBlur}
         onFocus = {handleFocus}
         placeholder="Digite seu endereço"
