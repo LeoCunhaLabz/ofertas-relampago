@@ -23,7 +23,7 @@ jobs:
       
       - name: Instalar lodash.debounce na pasta api
         run: |
-          cd api
+          cd my-app
           npm install lodash.debounce
       
       - name: Instalar next.js na pasta my-app
