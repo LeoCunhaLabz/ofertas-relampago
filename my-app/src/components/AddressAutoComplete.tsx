@@ -4,6 +4,7 @@ import Script from 'next/script';
 export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddress: any, value: any }) => {
   const [address, setAddress] = useState(value || '');
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const previousAddressRef = useRef<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -39,34 +40,38 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
 
   const handleBlur = () => {
     const inputElement = inputRef.current as unknown as HTMLInputElement;
-    const address = inputElement.value;
-
-    if (autocompleteRef.current) {
-      const place = autocompleteRef.current.getPlace();
-      if (!place || !place.geometry) {
-        // Simulate selecting the first suggestion
-        const service = new window.google.maps.places.AutocompleteService();
-        service.getPlacePredictions({ input: address, types: ['geocode'], componentRestrictions: { country: 'br' } }, (predictions, status) => {
-          if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions && predictions.length > 0) {
-            const firstPrediction = predictions[0];
-            const placesService = new window.google.maps.places.PlacesService(document.createElement('div'));
-            placesService.getDetails({ placeId: firstPrediction.place_id }, (placeDetails, status) => {
-              if (status === window.google.maps.places.PlacesServiceStatus.OK && placeDetails && placeDetails.geometry) {
-                const address = placeDetails.formatted_address;
-                const lat = placeDetails.geometry.location?.lat();
-                const lng = placeDetails.geometry.location?.lng();
-                setAddress(address);
-                onSelectAddress({ address, lat, lng });
-              }
-            });
-          }
-        });
-      } else {
-        setAddress(address);
-        onSelectAddress({ address });
+    const currentAddress = inputElement.value;
+  
+    // Check if address has changed before making API calls
+    if (currentAddress !== previousAddressRef.current) {
+      previousAddressRef.current = currentAddress;
+  
+      if (autocompleteRef.current) {
+        const place = autocompleteRef.current.getPlace();
+        if (!place || !place.geometry) {
+          const service = new window.google.maps.places.AutocompleteService();
+          service.getPlacePredictions({ input: currentAddress, types: ['geocode'], componentRestrictions: { country: 'br' } }, (predictions, status) => {
+            if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions && predictions.length > 0) {
+              const firstPrediction = predictions[0];
+              const placesService = new window.google.maps.places.PlacesService(document.createElement('div'));
+              placesService.getDetails({ placeId: firstPrediction.place_id }, (placeDetails, status) => {
+                if (status === window.google.maps.places.PlacesServiceStatus.OK && placeDetails && placeDetails.geometry) {
+                  const address = placeDetails.formatted_address;
+                  const lat = placeDetails.geometry.location?.lat();
+                  const lng = placeDetails.geometry.location?.lng();
+                  setAddress(address);
+                  onSelectAddress({ address, lat, lng });
+                }
+              });
+            }
+          });
+        } else {
+          setAddress(currentAddress);
+          onSelectAddress({ address: currentAddress });
+        }
       }
     }
-  };
+  };  
 
   const handleFocus = () => {
     if (inputRef.current) {

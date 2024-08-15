@@ -96,7 +96,7 @@ export const register = (req, res) => {
                         } else {
                             transporter.sendMail({
                                 from: 'Ofertas Relampago <contato@ofertarelampago.app.br>',
-                                to:'leonardovalcesio@gmail.com',
+                                to: process.env.EMAIL_ADMIN,
                                 subject:'Ofertas Relâmpago - Novo Anunciante cadastrado',
                                 text: `Um novo ANUNCIANTE foi cadastrado com as seguintes informações:\nNome Comercial: ${nome_comercial}\nCNPJ: ${cnpj}\nRazão Social: ${razao_social}\nE-mail: ${email}\nEndereço: ${endereco}`, // Corpo do e-mail em texto plano
                                 html: `<p>Um novo ANUNCIANTE foi cadastrado com as seguintes informações:</p>
@@ -180,7 +180,7 @@ export const register = (req, res) => {
                         } else {
                             transporter.sendMail({
                                 from: 'Ofertas Relampago <contato@ofertarelampago.app.br>',
-                                to:'leonardovalcesio@gmail.com',
+                                to: process.env.EMAIL_ADMIN,
                                 subject:'Ofertas Relâmpago - Novo Usuário cadastrado',
                                 text: `Um novo USUÁRIO foi cadastrado com as seguintes informações:\nNome Comercial: ${nome_comercial}\nCNPJ: ${cnpj}\nRazão Social: ${razao_social}\nE-mail: ${email}\nEndereço: ${endereco}`, // Corpo do e-mail em texto plano
                                 html: `<p>Um novo USUÁRIO foi cadastrado com as seguintes informações:</p>
