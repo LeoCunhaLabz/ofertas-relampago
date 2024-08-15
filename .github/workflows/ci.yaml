@@ -21,6 +21,11 @@ jobs:
           npm uninstall bcrypt
           npm install bcrypt
       
+      - name: Instalar lodash.debounce na pasta api
+        run: |
+          cd api
+          npm install lodash.debounce
+      
       - name: Instalar next.js na pasta my-app
         run: |
           cd my-app
