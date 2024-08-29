@@ -9,6 +9,8 @@ import { makeRequest } from "@/../../axios";
 import { useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import { EventCard } from "@/components/EventCard";
+import Link from "next/link"; // Importe o componente Link
+
 
 export default function DetalhesOferta({ 
     params 
@@ -73,6 +75,11 @@ export default function DetalhesOferta({
                                 <p className="text-xl font-normal mb-2">Habilitado? {Number(anunciante?.habilitado) === 1 ? 'Sim' : 'Não'}</p>
                                 <p className="text-xl font-normal mb-2">Analisado? {Number(anunciante?.analisado) === 1 ? 'Sim' : 'Não'}</p>
                             </div>
+                            <Link href={`/painel-controle/anunciantes/${anuncianteId}/editar`}>
+                                <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                                    Editar
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>

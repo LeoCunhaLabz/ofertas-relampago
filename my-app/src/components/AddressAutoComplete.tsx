@@ -39,7 +39,7 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
     });
   };
 
-  const debouncedInitAutocomplete = debounce(initAutocomplete, 300); // debounce delay of 300ms
+  const debouncedInitAutocomplete = debounce(initAutocomplete, 1000); // debounce delay of 300ms
 
   const handleBlur = debounce(() => {
     const inputElement = inputRef.current as unknown as HTMLInputElement;
@@ -74,7 +74,7 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
         }
       }
     }
-  }, 1200); // debounce delay of 300ms  
+  }, 400); // debounce delay of 300ms  
 
   const handleFocus = () => {
     if (inputRef.current) {

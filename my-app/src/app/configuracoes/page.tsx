@@ -21,6 +21,7 @@ const Settings = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('alterar-informacoes')
   const [selectedAddress, setSelectedAddress] = useState(null)
+  const [transactions, setTransactions] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     imagemUrl: '',
     email: user?.email,
@@ -51,17 +52,66 @@ const Settings = () => {
     setFormData((prevData) => ({ ...prevData, endereco: addressData.address }))
   };
 
-  const upload = async () => {
+  const fetchTransactions = async () => {
     try {
-      const formData2 = new FormData();
-      img && formData2.append('file', img);
-      const res = await makeRequest.post('upload/', formData2)
-      console.log (res.data)
-      return res.data;
+      const response = await makeRequest.post('/post/gettransaction', {
+        email: user?.email,
+        id: user?.id,
+      });
+      setTransactions(response.data);
     } catch (error) {
-      console.log(error);
+      console.error('Erro ao buscar transações:', error);
     }
-  }
+  };
+
+  useEffect(() => {
+    if (selectedOption === 'historico-transacoes') {
+      fetchTransactions();
+    }
+  }, [selectedOption]);
+
+  const getTransactionType = (type: string) => {
+    switch (type) {
+      case 'compra_creditos':
+        return 'Compra';
+      case 'postagem_anuncio':
+        return 'Postagem';
+      default:
+        return type;
+    }
+  };
+  
+  const renderTransactionsTable = () => (
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border border-gray-200">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="py-2 px-4 border-b">Data</th>
+            <th className="py-2 px-4 border-b">Tipo de Transação</th>
+            <th className="py-2 px-4 border-b">Nº Créditos</th>
+            <th className="py-2 px-4 border-b">Saldo</th>
+            <th className="py-2 px-4 border-b">Descrição</th>
+          </tr>
+        </thead>
+        <tbody>
+          {transactions.map((transaction) => (
+            <tr key={transaction.id} className="hover:bg-gray-50">
+              <td className="py-2 px-4 border-b">{formatDate(transaction.data_hora_transacao)}</td>
+              <td className="py-2 px-4 border-b text-center">{getTransactionType(transaction.tipo_transacao)}</td>
+              <td className="py-2 px-4 border-b text-center">{transaction.num_creditos}</td>
+              <td className="py-2 px-4 border-b text-center">{transaction.saldo - 1}</td>
+              <td className="py-2 px-4 border-b text-right">{transaction.descricao}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+  
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString('pt-BR', options);
+  };
 
   useEffect(() => {
     if (user) {
@@ -118,16 +168,7 @@ const Settings = () => {
     setError('');
     setSuccess('');
     try {
-      let updatedImageUrl = formData.imagemUrl;
-      if (img) {
-        let uploadResult = await upload();
-        uploadResult = '/uploads/' + uploadResult;
-        if (uploadResult) {
-          updatedImageUrl = uploadResult;
-        }
-      }
       const response = await makeRequest.post('auth/updateinformation', {
-        imagem_url: updatedImageUrl,
         user_type: userType, 
         email: formData.email, 
         password: formData.password, 
@@ -403,10 +444,17 @@ const Settings = () => {
             </Button>
           </form>
         )
-        case 'alterar-informacoes':
-          return <div>Alterar Informações</div>      
         case 'historico-transacoes':
-        return <div>Histórico de Transações (Em construção)</div>
+          return (
+            <div>
+              <h2>Histórico de Transações</h2>
+              {transactions.length > 0 ? (
+                renderTransactionsTable()
+              ) : (
+                <p>Nenhuma transação encontrada.</p>
+              )}
+            </div>
+          );
       case 'sair-conta':
         return <div>
         <Button type="submit" size="lg" className="w-full" onClick={() => mutation.mutate()}>
@@ -442,9 +490,14 @@ const Settings = () => {
       <aside className={`fixed inset-0 z-40 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} sm:relative sm:translate-x-0 transition-transform duration-300 ease-in-out sm:block sm:w-1/4 p-4 bg-white text-gray-800`}>
         <nav>
           <ul className="space-y-4 mb-4">
-{/*            <li>
-              <Image src={user?.imagem_url && user?.imagem_url.length >0? user?.imagem_url: '/genericperson.png'} alt="Imagem de Perfil" width={200} height={48} className='max-h-32 object-contain my-4' />
-            </li> */}
+            <li>
+              <button
+                className="w-full text-left py-2 px-4 rounded transition-colors duration-300 hover:bg-gray-300"
+                onClick={() => router.back()}
+              >
+                Voltar
+              </button>
+            </li>
             <li>
               <button
                 className={`w-full text-left py-2 px-4 rounded transition-colors duration-300 ${
@@ -468,6 +521,20 @@ const Settings = () => {
               >
                 Alterar Senha
               </button>
+            </li>
+            <li>
+              {userType === 'anunciante' && (
+                <button
+                  className={`w-full text-left py-2 px-4 rounded transition-colors duration-300 ${
+                    selectedOption === 'historico-transacoes'
+                      ? 'bg-gray-600 text-white font-bold'
+                      : 'hover:bg-gray-300'
+                  }`}
+                  onClick={() => setSelectedOption('historico-transacoes')}
+                >
+                  Transações
+                </button>
+              )}
             </li>
             <li>
               <button

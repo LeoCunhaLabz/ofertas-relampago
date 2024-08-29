@@ -6,10 +6,12 @@ import Image from 'next/image';
 import { useContext } from 'react'
 import { UserContext } from '@/context/UserContext'
 import { makeRequest } from '@/../../axios';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 export function Header() {
   const [navbarOpen, setNavbarOpen] = useState(false);
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const [_ids, setIds] = useState<string[]>([]);
   const [randomId, setRandomId] = useState('');
   
@@ -30,6 +32,20 @@ export function Header() {
       isMounted = false; // Limpa a flag quando o componente é desmontado
     };
   }, []);
+
+  const router = useRouter();
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      return await makeRequest.post('auth/logout');
+    },
+    onSuccess: () => {
+      setUser({ username: '', img: '', imagem_url: '' });
+      localStorage.removeItem("ofertas-relampago:user");
+      localStorage.removeItem("ofertas-relampago:userType");
+      router.push("/logout");
+    },
+  });
 
   return (
     <div className="top-0 mb-4 w-full z-30 clearNav md:bg-opacity-90 transition duration-300 ease-in-out items-center">
@@ -114,7 +130,7 @@ export function Header() {
                   href="/configuracoes"
                   className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
                 >
-                  Configurações
+                  Perfil
                 </a>
               </li>
               <li className="md:mr-10">
@@ -125,9 +141,14 @@ export function Header() {
                   <span className="justify-center">Ver Aprovações</span>
                 </a>
               </li>
-{/*              <li>
-                <Image src={user?.imagem_url && user?.imagem_url.length >0 ? user?.imagem_url: '/genericperson.png'} alt="Imagem de Perfil" width={48} height={48} className='hidden md:block rounded-full' />
-              </li> */}
+              <li>
+                <button
+                  className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
+                  onClick={() => mutation.mutate()}
+                >
+                  Sair
+                </button>
+              </li>
             </ul>
           </nav>
         </div>

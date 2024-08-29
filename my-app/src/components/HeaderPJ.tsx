@@ -1,47 +1,52 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './LPNavbar.css';
 import Image from 'next/image';
-import { useContext } from 'react'
-import { UserContext } from '@/context/UserContext'
+import { UserContext } from '@/context/UserContext';
 import { makeRequest } from '@/../../axios';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 export function Header() {
   const [navbarOpen, setNavbarOpen] = useState(false);
-  const [anunciante, setUser] = useState({username:'', img:'', imagem_url: ''});
-  const { user } = useContext(UserContext);
+  const [anunciante, setAnunciante] = useState({ username: '', img: '', imagem_url: '' });
+  const { user, setUser } = useContext(UserContext);
   const userType = 'anunciante';
-  const email = user?.email
+  const email = user?.email;
 
-  useEffect(()=>{
+  useEffect(() => {
     if (email && userType) {
-      makeRequest.post("post/getmoedas", {user_type: userType, email}).then((res) => {
-        const newValue = res.data.data[0]?.moedas
-        // Recuperar o objeto de usuário atual do localStorage
+      makeRequest.post("post/getmoedas", { user_type: userType, email }).then((res) => {
+        const newValue = res.data.data[0]?.moedas;
         let storedUser = localStorage.getItem("ofertas-relampago:user");
         if (storedUser) {
-          try{
+          try {
             let userObj = JSON.parse(storedUser);
-
-            // Atualizar o campo "moedas" com o novo valor
             userObj.moedas = newValue;
-      
-            // Salvar o objeto atualizado de volta no localStorage
             localStorage.setItem("ofertas-relampago:user", JSON.stringify(userObj));
-      
-            // Atualizar o estado do usuário, se necessário
-            setUser(userObj);
+            setAnunciante(userObj);
           } catch (error) {
             console.error("Erro ao fazer parse do objeto de usuário", error);
           }
         }
-      }
-    )
-  }
-}
-,[userType, email]);  
+      });
+    }
+  }, [userType, email]);
 
+  const router = useRouter();
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      return await makeRequest.post('auth/logout');
+    },
+    onSuccess: () => {
+      setUser({ username: '', img: '', imagem_url: '' });
+      localStorage.removeItem("ofertas-relampago:user");
+      localStorage.removeItem("ofertas-relampago:userType");
+      router.push("/logout");
+    },
+  });
 
   return (
     <div className="top-0 mb-4 w-full z-30 clearNav md:bg-opacity-90 transition duration-300 ease-in-out items-center">
@@ -53,9 +58,8 @@ export function Header() {
           >
             <Image src='/logo_oferta_relampago.png' alt='Logotipo' height={75} width={100} />
           </a>
-          {/* Mobile menu button */}
           <button
-            className="text-white cursor-pointer leading-none px-3 py-1 md:hidden outline-none focus:outline-none "
+            className="text-white cursor-pointer leading-none px-3 py-1 md:hidden outline-none focus:outline-none"
             type="button"
             aria-label="button"
             onClick={() => setNavbarOpen(!navbarOpen)}
@@ -80,34 +84,34 @@ export function Header() {
         </div>
         <div
           className={
-            "md:flex flex-grow items-center" + 
+            "md:flex flex-grow items-center" +
             (navbarOpen ? " full-screen-sidebar open" : " full-screen-sidebar")
           }
         >
-        <button
-          className="exit-button md:hidden"
-          onClick={() => setNavbarOpen(false)}
-        >
-          <Image
-            src="/close-x.svg"
-            width={24}
-            height={24}
-            alt='Close Menu Button'
+          <button
+            className="exit-button md:hidden"
+            onClick={() => setNavbarOpen(false)}
+          >
+            <Image
+              src="/close-x.svg"
+              width={24}
+              height={24}
+              alt='Close Menu Button'
             />
-        </button>
-          <nav className="flex-col flex-grow ">
+          </button>
+          <nav className="flex-col flex-grow">
             <ul className="flex flex-grow justify-end flex-wrap items-center mt-20 md:mt-0">
               <li>
                 <a href="/comprar-creditos">
                   <div
                     className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
                   >
-                  <Image
-                    src="/saldo.svg"
-                    width={24}
-                    height={24}
-                    alt='Saldo'
-                    className="mr-2"
+                    <Image
+                      src="/saldo.svg"
+                      width={24}
+                      height={24}
+                      alt='Saldo'
+                      className="mr-2"
                     />
                     <span className='text-red-500 font-bold mr-1'>{user?.moedas}</span>créditos
                   </div>
@@ -118,7 +122,7 @@ export function Header() {
                   href="/configuracoes"
                   className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
                 >
-                  Configurações
+                  Perfil
                 </a>
               </li>
               <li className="md:mr-10">
@@ -139,9 +143,14 @@ export function Header() {
                   </svg>
                 </a>
               </li>
-{/*              <li>
-                <Image src={user?.imagem_url && user?.imagem_url.length >0? user?.imagem_url: '/genericcompany.png'} alt="Imagem de Perfil" width={100} height={100} className='max-h-32 object-contain my-4 rounded-md' />
-              </li> */}
+              <li>
+                <button
+                  className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
+                  onClick={() => mutation.mutate()}
+                >
+                  Sair
+                </button>
+              </li>
             </ul>
           </nav>
         </div>
