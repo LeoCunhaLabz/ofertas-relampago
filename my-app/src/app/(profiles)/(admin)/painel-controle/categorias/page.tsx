@@ -43,7 +43,7 @@ export default function Categorias() {
                 type="text"
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
-                placeholder="Add new category"
+                placeholder="Adicionar Categoria"
             />
             <button 
             className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-700"

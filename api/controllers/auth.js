@@ -554,7 +554,6 @@ export const atualizarInformação = (req, res) => {
         razao_social,
         endereco, 
         nome_comercial, 
-        cpf, 
         nome_completo, 
         nascimento, 
         genero, 
@@ -605,9 +604,8 @@ export const atualizarInformação = (req, res) => {
                 } else if (user_type == "cliente") {
                     atualizacao = {
                         email,
-                        cpf,
                         nome_completo,
-                        nascimento,
+                        nascimento: nascimento.split('T')[0],
                         genero,
                         celular,
                         endereco,
