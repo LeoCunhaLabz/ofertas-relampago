@@ -96,4 +96,5 @@ export type UniqueEventModel = {
     imagem_url_anunciante: string;
     latitude: string;
     longitude: string;
+    habilitado: string;
 };

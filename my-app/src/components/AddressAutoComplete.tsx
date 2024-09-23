@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useRef, useEffect } from 'react';
 import Script from 'next/script';
 import debounce from 'lodash.debounce';
@@ -15,7 +17,25 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
         debouncedInitAutocomplete();
       }
     }
-  }, [value]);
+
+    const handleInputEvent = () => {
+      const inputElement = inputRef.current as unknown as HTMLInputElement;
+      const currentAddress = inputElement.value;
+
+      if (currentAddress !== previousAddressRef.current) {
+        previousAddressRef.current = currentAddress;
+        setAddress(currentAddress);
+        onSelectAddress({ address: currentAddress });
+      }
+    };
+
+    const inputElement = inputRef.current as unknown as HTMLInputElement;
+    inputElement.addEventListener('input', handleInputEvent);
+
+    return () => {
+      inputElement.removeEventListener('input', handleInputEvent);
+    };
+  }, [value, onSelectAddress]);
 
   const initAutocomplete = () => {
     const inputElement = inputRef.current as unknown as HTMLInputElement;
@@ -39,16 +59,15 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
     });
   };
 
-  const debouncedInitAutocomplete = debounce(initAutocomplete, 1000); // debounce delay of 300ms
+  const debouncedInitAutocomplete = debounce(initAutocomplete, 1000); // debounce delay of 1000ms
 
   const handleBlur = debounce(() => {
     const inputElement = inputRef.current as unknown as HTMLInputElement;
     const currentAddress = inputElement.value;
-  
-    // Check if address has changed before making API calls
+
     if (currentAddress !== previousAddressRef.current) {
       previousAddressRef.current = currentAddress;
-  
+
       if (autocompleteRef.current) {
         const place = autocompleteRef.current.getPlace();
         if (!place || !place.geometry) {
@@ -74,7 +93,7 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
         }
       }
     }
-  }, 400); // debounce delay of 300ms  
+  }, 400); // debounce delay of 400ms
 
   const handleFocus = () => {
     if (inputRef.current) {
@@ -102,10 +121,10 @@ export const AddressAutocomplete = ({ onSelectAddress, value }: { onSelectAddres
         type="text"
         value={address}
         onChange={(e) => handleChange(e.target.value)}
-        onBlur = {handleBlur}
-        onFocus = {handleFocus}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         placeholder="Digite seu endereço"
-        style={{ width: '100%', padding: '10px', border: 'none', outline: 'none'  }}
+        style={{ width: '100%', padding: '10px', border: 'none', outline: 'none' }}
         autoComplete='off'
       />
     </div>

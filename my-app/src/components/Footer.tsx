@@ -16,14 +16,7 @@ export function Footer() {
                     Quem Somos
                   </a>
                 </li>
-                <li>
-                  <a
-                    className="text-sm hover:text-gray-900 transition-colors duration-200"
-                    href="/anunciante/login"
-                  >
-                    Já sou anunciante
-                  </a>
-                </li>
+
               </ul>
             </li>
             <li className="space-y-5 row-span-2">
@@ -53,6 +46,14 @@ export function Footer() {
                     href="/recuperar-senha"
                   >
                     Recuperar Senha
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="text-sm hover:text-gray-900 transition-colors duration-200"
+                    href="/anunciante/login"
+                  >
+                    Quero Anunciar
                   </a>
                 </li>
               </ul>

@@ -4,21 +4,19 @@ import { Title } from "@/components/Title";
 import { UserContext } from '@/context/UserContext'
 import { useEffect, useState, useContext } from "react";
 import { makeRequest } from "@/../../axios";
-import { AnuncianteModel } from "@/models";
+import { UniqueEventModel } from "@/models";
 import Link from "next/link";
-import React from "react";
 
 export default function PainelControleClientes() {
-    const [events, setEvents] = useState<AnuncianteModel[]>([]);
+    const [events, setEvents] = useState<UniqueEventModel[]>([]);
     const { user } = useContext(UserContext);
     const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         if (user) {
-            makeRequest.post("post/getallanunciantes", { email: user?.email }).then((res) => {
+            makeRequest.post("post/getallofertas", { email: user?.email }).then((res) => {
                 setEvents(res.data.data
-                    .filter((event: { analisado: number; }) => event.analisado === 0)
-                    .sort((a: { id: number; }, b: { id: number; }) => Number(b.id) - Number(a.id)));
+                    .sort((a: { data_cadastro: string; }, b: { data_cadastro: string; }) => new Date(b.data_cadastro).getTime() - new Date(a.data_cadastro).getTime()));
             }).catch((err) => {
                 console.log(err)
             })
@@ -31,18 +29,18 @@ export default function PainelControleClientes() {
     const indexOfLastEvent = currentPage * eventsPerPage;
     const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
     const currentEvents = events
-        ?.filter(event => event.nome_comercial.toLowerCase().includes(searchTerm.toLowerCase()))
+        ?.filter(event => event.nome_produto.toLowerCase().includes(searchTerm.toLowerCase()))
         .slice(indexOfFirstEvent, indexOfLastEvent);
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     return (
         <main className="w-full mt-0">
-            <Title className="text-center">Aprovações Pendentes: {events.length} </Title>
+            <Title className="text-center">Total de Ofertas: {events.length} </Title>
             <div className="flex justify-center mt-4">
                 <input
                     type="text"
-                    placeholder="Buscar por nome comercial"
+                    placeholder="Buscar por oferta"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="p-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -53,23 +51,29 @@ export default function PainelControleClientes() {
                     <thead>
                         <tr>
                             <th className="py-2">Data de Cadastro</th>
-                            <th className="py-2">Nome Comercial</th>
-                            <th className="py-2">CNPJ</th>
+                            <th className="py-2">Oferta</th>
+                            <th className="py-2">Preço Oferta</th>
                             <th className="py-2">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {currentEvents?.map((event) => (
-                            <tr key={event.id}>
-                                <td className="border px-4 py-2">{new Date(event.data_cadastro).toLocaleDateString()}</td>
+                            <tr key={event.id_anuncio}>
+                                <td className="border px-4 py-2">
+                                    {new Date(event.data_cadastro).toLocaleDateString('pt-BR', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric',
+                                    })}
+                                </td>
                                 <td className="border px-4 py-2 hover:font-bold">
-                                    <Link href={`/painel-controle/aprovacoes/${event.id}`}>
-                                        {event.nome_comercial}
+                                    <Link href={`/painel-controle/ofertas/${event.id_anuncio}`}>
+                                        {event.nome_produto}
                                     </Link>
                                 </td>
-                                <td className="border px-4 py-2">{event.cnpj}</td>
-                                <td className={`border px-4 py-2 ${Number(event.analisado) === 0 ? 'text-black' : 'text-green-500'}`}>
-                                    {Number(event.analisado) === 0 ? <strong>Pendente</strong> : "Aprovado"}
+                                <td className="border px-4 py-2">R$ {parseFloat(event.preco_oferta).toFixed(2).replace('.', ',')}</td>
+                                <td className={`border px-4 py-2 ${Number(event.ativo) === 1 ? 'text-green-500' : 'text-red-500'}`}>
+                                    {Number(event.ativo) === 1 ? "Ativo" : "Inativo"}
                                 </td>
                             </tr>
                         ))}

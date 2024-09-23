@@ -30,7 +30,8 @@ export default function DetalhesOferta({
         if (userTypeFromLocalStorage && anuncianteId && user?.email) {
             setUserType(userTypeFromLocalStorage);
             makeRequest.post("post/getoneanunciante", { email: user?.email, id: anuncianteId }).then((res) => {
-                setAnunciante(res.data.data[0]);
+                setAnunciante(res.data.data);
+                console.log(anunciante);  
             }).catch((err) => {
                 console.log(err);
             })}
@@ -59,7 +60,7 @@ export default function DetalhesOferta({
                         <div className="md:w-1/2 md:pl-6 mt-4 md:mt-0 flex flex-col">
                             <h1 className="text-3xl font-semibold mt-0 uppercase">{anunciante && anunciante[0]?.nome_comercial}</h1>
                             <div className='mb-8'>
-                            <p className="text-sm">Data de cadastro: {anunciante && anunciante.length > 0 && anunciante[0].data_cadastro ? format(new Date(anunciante[0].data_cadastro), 'dd/MM/yyyy', { locale: ptBR }) : 'Data não disponível'}</p>                            </div>
+                            <p className="text-sm">Data de cadastro: {anunciante && anunciante.length > 0 && anunciante[0].data_cadastro ? format(new Date(anunciante[0].data_cadastro), 'dd/MM/yyyy', { locale: ptBR }) : 'Data não disponível'}</p>                           </div>
                             <div>
                                 <p className="text-xl font-normal mb-2">CNPJ: {anunciante && anunciante[0]?.cnpj}</p>
                                 <p className="text-xl font-normal mb-2">Razão Social: {anunciante && anunciante[0]?.razao_social}</p>
