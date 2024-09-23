@@ -44,7 +44,11 @@ export const register = (req, res) => {
     if (user_type == "anunciante") {
 
         // Verificar se os campos obrigatórios foram preenchidos
-        if (!email || !password || !confirmPassword || !cnpj || !razao_social || !nome_comercial || !endereco) {
+        if (!endereco) {
+            return res.status(400).json({ message: "O endereço fornecido não foi reconhecido pelo Google Maps. Por favor, reescreva o endereço." });
+        }
+
+        if (!email || !password || !confirmPassword || !cnpj || !razao_social || !nome_comercial) {
             return res.status(400).json({ message: "Por favor, preencha todos os campos." });
         }
 
@@ -126,8 +130,12 @@ export const register = (req, res) => {
         });
     } else if (user_type == "cliente") {
 
+        if (!endereco) {
+            return res.status(400).json({ message: "O endereço fornecido não foi reconhecido pelo Google Maps. Por favor, reescreva o endereço." });
+        }
+
         // Verificar se os campos obrigatórios foram preenchidos
-        if (!email || !password || !confirmPassword || !nome_completo || !nascimento || !genero || !celular || !endereco) {
+        if (!email || !password || !confirmPassword || !nome_completo || !nascimento || !genero || !celular) {
             return res.status(400).json({ message: "Por favor, preencha todos os campos." });
         }
 
@@ -642,6 +650,166 @@ export const atualizarInformação = (req, res) => {
         )
         
     })
+}}
+
+export const atualizarInformaçãoAdm = (req, res) => {
+    const {
+        imagem_url,
+        user_type, 
+        email,
+        email_adm, 
+        cnpj, 
+        razao_social,
+        endereco, 
+        nome_comercial, 
+        cpf, 
+        nome_completo, 
+        nascimento, 
+        genero, 
+        celular,
+        moedas
+    } = req.body
+
+    if (email_adm !== process.env.EMAIL_ADMIN) {
+        return res.status(400).json({ message: "Administrador não cadastrado. Informações não foram atualizadas" });
+    } else {
+        let user_db = "";
+
+        if (user_type == "anunciante") {
+            user_db = "anunciantes"
+        } else if (user_type == "cliente") {
+            user_db = 'clientes'
+        }
+        const sqlQuery = `SELECT * FROM ${user_db} WHERE email = ?`;
+
+        db.query(
+            sqlQuery,
+            [email],
+            async(error, data) => {
+                if (error) {
+                    console.log(error);
+                    return res.status(500).json({ message: "Erro ao fazer requisição." });
+                }
+                if (data.length === 0) {
+                    return res.status(404).json({ message: "Usuário não encontrado." });
+                } else {
+                    const user = data[0];
+                }
+                
+                let atualizacao;
+
+                if (user_type == "anunciante") {
+                    atualizacao = {
+                        cnpj,
+                        razao_social,
+                        nome_comercial,
+                        endereco,
+                        imagem_url,
+                        moedas
+                    }
+                } else if (user_type == "cliente") {
+                    atualizacao = {
+                        email,
+                        cpf,
+                        nome_completo,
+                        nascimento,
+                        genero,
+                        celular,
+                        endereco,
+                        imagem_url,
+                    }
+                }
+
+                if (endereco) {
+                    try {
+                      const { lat, lng } = await geocodeAddress(endereco);
+                      atualizacao.latitude = lat;
+                      atualizacao.longitude = lng;
+                    } catch (error) {
+                      console.log(error);
+                      return res.status(500).json({ message: "Erro ao geocodificar o endereço." });
+                    }
+                }
+                
+                const sqlQuery2 = `UPDATE ${user_db} SET ? WHERE email = ?`;
+
+                db.query(sqlQuery2, [atualizacao, email], (error) => {
+                    if (error) {
+                        console.log(error);
+                        return res.status(500).json({ message: "Erro ao atualizar as informações." });
+                    } else {
+                        if (user_type == "anunciante") {
+                            db.query(`SELECT * FROM anuncios WHERE email = ?`, [email], (error, updateddata) => {})
+                        }
+                        db.query(`SELECT * FROM ${user_db} WHERE email = ?`, [email], (error, updateddata) => {
+                            if (error) {
+                                console.log(error);
+                                return res.status(500).json({ message: "Erro ao atualizar as informações." });
+                            } else {
+                                return res.status(200).json({ data: updateddata });
+                            }
+                        }
+                    )
+                }
+            }
+        )
+        
+    })
+}}
+
+export const atualizarOfertaAdm = (req, res) => {
+    const {
+        id_anuncio,
+        preco_original,
+        preco_oferta,
+        categoria_produto,
+        marca_produto,
+        descricao_oferta,
+        email_adm
+    } = req.body
+
+    if (email_adm !== process.env.EMAIL_ADMIN) {
+        return res.status(400).json({ message: "Administrador não cadastrado. Informações não foram atualizadas" });
+    } else {
+
+        const sqlQuery = `SELECT * FROM anuncios WHERE id_anuncio = ?`;
+
+        db.query(sqlQuery, [id_anuncio], async (error, data) => {
+            if (error) {
+                console.log(error);
+                return res.status(500).json({ message: "Erro ao fazer requisição." });
+            }
+            if (data.length === 0) {
+                return res.status(404).json({ message: "Anúncio não encontrado." });
+            } else {
+                const atualizacao = {
+                    preco_original,
+                    preco_oferta,
+                    categoria_produto,
+                    marca_produto,
+                    descricao_oferta
+                };
+
+                const sqlQuery2 = `UPDATE anuncios SET ? WHERE id_anuncio = ?`;
+
+                db.query(sqlQuery2, [atualizacao, id_anuncio], (error) => {
+                    if (error) {
+                        console.log(error);
+                        return res.status(500).json({ message: "Erro ao atualizar as informações." });
+                    } else {
+                        db.query(`SELECT * FROM anuncios WHERE id_anuncio = ?`, [id_anuncio], (error, updateddata) => {
+                            if (error) {
+                                console.log(error);
+                                return res.status(500).json({ message: "Erro ao atualizar as informações." });
+                            } else {
+                                return res.status(200).json({ data: updateddata });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
 }}
 
 export const redefinirSenhaLink = async (req, res) => {
