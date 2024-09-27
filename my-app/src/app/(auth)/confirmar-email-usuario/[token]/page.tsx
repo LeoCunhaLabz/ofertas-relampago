@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import React from 'react';
+import { makeRequest } from '../../../../../axios'
 
 const ConfirmarEmailUsuario = ({ 
     params 
@@ -17,7 +18,7 @@ const ConfirmarEmailUsuario = ({
 
     useEffect(() => {
         if (token) {
-            axios.post(`/api/auth/confirmar-email-usuario/${token}`)
+            makeRequest.post(`/api/auth/confirmar-email-usuario/${token}`)
                 .then((response) => {
                     setMessage(response.data.message);
                 })

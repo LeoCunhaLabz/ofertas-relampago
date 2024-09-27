@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import React from 'react';
+import { makeRequest } from '../../../../../axios'
 
 const ConfirmarEmailAnunciante = (
     { 
@@ -19,7 +20,7 @@ const ConfirmarEmailAnunciante = (
 
     useEffect(() => {
         if (token) {
-            axios.post(`/api/auth/confirmar-email-anunciante/${token}`)
+            makeRequest.post(`/api/auth/confirmar-email-anunciante/${token}`)
                 .then((response) => {
                     setMessage(response.data.message);
                 })
