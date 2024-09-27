@@ -19,7 +19,7 @@ const ConfirmarEmailAnunciante = (
 
     useEffect(() => {
         if (token) {
-            axios.post(`/api/confirmar-email-anunciante/${token}`)
+            axios.post(`/api/auth/confirmar-email-anunciante/${token}`)
                 .then((response) => {
                     setMessage(response.data.message);
                 })

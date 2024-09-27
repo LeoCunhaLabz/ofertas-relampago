@@ -17,7 +17,7 @@ const ConfirmarEmailUsuario = ({
 
     useEffect(() => {
         if (token) {
-            axios.post(`/api/confirmar-email-usuario/${token}`)
+            axios.post(`/api/auth/confirmar-email-usuario/${token}`)
                 .then((response) => {
                     setMessage(response.data.message);
                 })
