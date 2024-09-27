@@ -30,6 +30,11 @@ jobs:
         run: |
           cd my-app
           npm install next
+
+        - name: Instalar react-currency-input-field na pasta my-app
+        run: |
+          cd my-app
+          npm install react-currency-input-field
       
       - name: Build da aplicação next.js na pasta my-app
         run: |
