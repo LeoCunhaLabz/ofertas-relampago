@@ -31,7 +31,7 @@ jobs:
           cd my-app
           npm install next
 
-        - name: Instalar react-currency-input-field na pasta my-app
+      - name: Instalar react-currency-input-field na pasta my-app
         run: |
           cd my-app
           npm install react-currency-input-field
