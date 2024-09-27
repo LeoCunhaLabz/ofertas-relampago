@@ -5,9 +5,16 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import React from 'react';
 
-const ConfirmarEmail = () => {
-    const searchParams = useSearchParams();
-    const token = searchParams.get('token');
+const ConfirmarEmailAnunciante = (
+    { 
+        params 
+    }: {
+        params: {
+            token: string
+        }
+    }
+) => {
+    const token = params.token;
     const [message, setMessage] = useState('');
 
     useEffect(() => {
@@ -30,4 +37,4 @@ const ConfirmarEmail = () => {
     );
 };
 
-export default ConfirmarEmail;
+export default ConfirmarEmailAnunciante;
