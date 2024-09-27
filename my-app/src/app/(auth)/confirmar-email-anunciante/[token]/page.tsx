@@ -20,7 +20,7 @@ const ConfirmarEmailAnunciante = (
 
     useEffect(() => {
         if (token) {
-            makeRequest.post(`/api/auth/confirmar-email-anunciante/${token}`)
+            makeRequest.post(`/auth/confirmar-email-anunciante/${token}`)
                 .then((response) => {
                     setMessage(response.data.message);
                 })
