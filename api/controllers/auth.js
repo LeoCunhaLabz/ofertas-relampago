@@ -116,10 +116,30 @@ export const register = (req, res) => {
                                 if (error) {
                                     console.log(error);
                                 } else {
-                                    console.log("Email enviado: " + info.response);
+                                    console.log("Email enviado a administrador: " + info.response);
+                                }
+                            })
+                            
+                            const confirmToken = jwt.sign({ email }, process.env.TOKEN);
+                            const confirmUrl = `http://ofertarelampago.app.br/confirmar-email-anunciante/${confirmToken}`;
+
+                            transporter.sendMail({
+                                from: 'Ofertas Relampago <contato@ofertarelampago.app.br>',
+                                to: email,
+                                subject: 'Confirmação de Email',
+                                text: `Por favor, clique no seguinte link para confirmar seu email: ${confirmUrl}`,
+                                html: `<p>Por favor, clique no seguinte link para confirmar seu email:</p><a href="${confirmUrl}">Confirmar Email</a>`,
+                            }, (error, info) => {
+                                if (error) {
+                                    console.log(error);
+                                    return res.status(500).json({ message: "Erro ao enviar email de confirmação." });
+                                } else {
+                                    return res.status(201).json({ message: "Usuário registrado com sucesso. Por favor, verifique seu email para confirmar a conta." });
                                 }
                             });
-                            return res.status(201).json({ message: "Usuário registrado com sucesso." });
+                            
+                            ;
+                            return res.status(201).json({ message: "Usuário registrado com sucesso. Por favor, verifique seu email para confirmar a conta." });
                         }
                     });
                 } catch (error) {
@@ -207,6 +227,25 @@ export const register = (req, res) => {
                                     console.log("Email enviado: " + info.response);
                                 }
                             });
+
+                            const confirmToken = jwt.sign({ email }, process.env.TOKEN);
+                            const confirmUrl = `http://ofertarelampago.app.br/confirmar-email-usuario/${confirmToken}`;
+
+                            transporter.sendMail({
+                                from: 'Ofertas Relampago <contato@ofertarelampago.app.br>',
+                                to: email,
+                                subject: 'Confirmação de Email',
+                                text: `Por favor, clique no seguinte link para confirmar seu email: ${confirmUrl}`,
+                                html: `<p>Por favor, clique no seguinte link para confirmar seu email:</p><a href="${confirmUrl}">Confirmar Email</a>`,
+                            }, (error, info) => {
+                                if (error) {
+                                    console.log(error);
+                                    return res.status(500).json({ message: "Erro ao enviar email de confirmação." });
+                                } else {
+                                    return res.status(201).json({ message: "Usuário registrado com sucesso. Por favor, verifique seu email para confirmar a conta." });
+                                }
+                            });
+
                             return res.status(201).json({ message: "Usuário registrado com sucesso." });
                         }
                     });
@@ -240,14 +279,20 @@ export const login = (req, res) => {
                 } else {
                     const user = data[0];
 
-                    if (user.habilitado === 0) {
-                        return res.status(403).json({ message: "Usuário ainda não está habilitado." });
-                    }
-
                     const checkPassword = await bcrypt.compare(password, user.password);
 
                     if (!checkPassword) {
                         return res.status(422).json({ message: "Senha incorreta." });
+                    }
+
+                    // Verificação de confirmação de email
+                    if (!user.email_confirm) {
+                        return res.status(403).json({ message: "Email não confirmado." });
+                    }
+
+                    
+                    if (user.habilitado === 0) {
+                        return res.status(403).json({ message: "Usuário ainda não está habilitado." });
                     }
 
                     try {
@@ -298,6 +343,11 @@ export const login = (req, res) => {
 
                     if (!checkPassword) {
                         return res.status(422).json({ message: "Senha incorreta." });
+                    }
+
+                    // Verificação de confirmação de email
+                    if (!user.email_confirm) {
+                        return res.status(403).json({ message: "Email não confirmado." });
                     }
 
                     try {
@@ -857,5 +907,58 @@ export const getPublicKey = (req, res) => {
         res.status(200).json({ publicKey });
     } else {
         res.status(500).json({ message: 'Public key not found' });
+    }
+};
+
+
+export const confirmEmailAnunciante = (req, res) => {
+    const { token } = req.params;
+
+    try {
+        const decoded = jwt.verify(token, process.env.TOKEN);
+        const { email } = decoded;
+
+        let query = "";
+        let params = [email];
+
+        query = "UPDATE anunciantes SET email_confirm = 1 WHERE email = ?";
+
+        db.query(query, params, (error) => {
+            if (error) {
+                console.log(error);
+                return res.status(500).json({ message: "Erro ao confirmar o email." });
+            } else {
+                return res.status(200).json({ message: "Email confirmado com sucesso." });
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Erro ao confirmar o email." });
+    }
+};
+
+export const confirmEmailUsuario = (req, res) => {
+    const { token } = req.params;
+
+    try {
+        const decoded = jwt.verify(token, process.env.TOKEN);
+        const { email } = decoded;
+
+        let query = "";
+        let params = [email];
+
+        query = "UPDATE clientes SET email_confirm = 1 WHERE email = ?";
+
+        db.query(query, params, (error) => {
+            if (error) {
+                console.log(error);
+                return res.status(500).json({ message: "Erro ao confirmar o email." });
+            } else {
+                return res.status(200).json({ message: "Email confirmado com sucesso." });
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Erro ao confirmar o email." });
     }
 };

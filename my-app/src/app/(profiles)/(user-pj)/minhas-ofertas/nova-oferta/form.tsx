@@ -4,12 +4,13 @@ import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Success } from '@/components/ui/success'
 import { makeRequest } from '@/../../axios';
 import { useContext } from 'react'
 import { UserContext } from '@/context/UserContext'
 import React from 'react'
+import CurrencyInput from 'react-currency-input-field';
 
 export const Form = () => {
 
@@ -26,6 +27,7 @@ export const Form = () => {
     data_fim_oferta:'',
     imagem_url: '',
   })
+  const [categories, setCategories] = useState([]);
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [img, setImg] = useState<File | null>(null);
@@ -42,10 +44,24 @@ export const Form = () => {
     }
   }
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await makeRequest.get('category/see');
+        setCategories(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const handleRegister = async (e:any) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    
     try {
       let updatedImageUrl = formData.imagem_url;
       if (img) {
@@ -55,7 +71,20 @@ export const Form = () => {
           updatedImageUrl = uploadResult;
         }
       }
-    const updatedFormData = {...formData, email: user?.email, endereco_loja: user?.endereco, id_anunciante: user?.id, imagem_url: updatedImageUrl}
+
+    const precoOriginal = formData.preco_original.replace(',', '.');
+    const precoOferta = formData.preco_oferta.replace(',', '.');
+
+    // Converte os valores para números de ponto flutuante
+    const updatedFormData = {
+      ...formData, 
+      email: user?.email, 
+      endereco_loja: user?.endereco, 
+      id_anunciante: user?.id, 
+      imagem_url: updatedImageUrl,
+      preco_original: precoOriginal,
+      preco_oferta: precoOferta
+    }
     makeRequest.post("post/", updatedFormData
     ).then((res) => {
       console.log(res.data)
@@ -80,6 +109,11 @@ export const Form = () => {
     setFormData((prevData) => ({ ...prevData, [id]: value }))
   }
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [id]: value }));
+  };
+
   return (
     <form className="mt-10 space-y-12 sm:w-[400px]" onSubmit={(e)=>handleRegister(e)}>
       <div className="grid items-center gap-1.5 mt-6">
@@ -99,14 +133,20 @@ export const Form = () => {
       </div>
       <div className="grid w-full items-center gap-1.5">
         <Label htmlFor="categoria_produto">Categoria do Produto</Label>
-        <Input
-          className="w-full"
+        <select
+          className="w-full p-2 border border-gray-300 rounded"
           required
           value={formData.categoria_produto}
-          onChange={handleInputChange}
+          onChange={handleSelectChange}
           id="categoria_produto"
-          type="text"
-        />
+        >
+          <option value="">Selecione uma categoria</option>
+          {categories.map((category: any) => (
+            <option key={category.id} value={category.name}>
+              {category.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="grid w-full items-center gap-1.5">
@@ -146,30 +186,29 @@ export const Form = () => {
 
       <div className="grid w-full items-center gap-1.5">
         <Label htmlFor="preco_original">Preço Original</Label>
-        <Input
-          className="w-full"
+        <CurrencyInput
+          className='flex h-10 w-full rounded-md border border-gray-300 bg-transparent py-2 px-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-50 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-900'
           required
           value={formData.preco_original}
-          onChange={handleInputChange}
+          decimalsLimit={2}
+          onValueChange={(value: string | undefined) => setFormData(prevData => ({...prevData, preco_original: value || ''}))}
           id="preco_original"
-          type="number"
-          step="2"
+          intlConfig={{ locale: 'pt-BR', currency: 'BRL' }}
         />
       </div>
 
       <div className="grid w-full items-center gap-1.5">
         <Label htmlFor="preco_oferta">Preço da Oferta</Label>
-        <Input
-          className="w-full"
+        <CurrencyInput
+          className='flex h-10 w-full rounded-md border border-gray-300 bg-transparent py-2 px-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-50 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-900'
           required
           value={formData.preco_oferta}
-          onChange={handleInputChange}
+          decimalsLimit={2}
+          onValueChange={(value: string | undefined) => setFormData(prevData => ({...prevData, preco_oferta: value || ''}))}
           id="preco_oferta"
-          type="number"
-          step="2"
+          intlConfig={{ locale: 'pt-BR', currency: 'BRL' }}
         />
       </div>
-
       <div className="grid w-full items-center gap-1.5">
         <Label htmlFor="data_inicio_oferta">Data de Início da Oferta</Label>
         <Input

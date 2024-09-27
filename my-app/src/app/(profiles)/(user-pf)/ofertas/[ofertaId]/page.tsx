@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { makeRequest } from "@/../../axios";
 import { useContext } from "react";
 import { UserContext } from "@/context/UserContext";
+import BackButton from "@/components/BackButton"; // Importar o BackButton
 
 export default function DetalhesOferta({ 
     params 
@@ -37,6 +38,7 @@ export default function DetalhesOferta({
 
     return ( 
     <main className="mt-10">
+        <BackButton />
         {event ? (
         <UniqueEvent event={event[0]} />
         ) : (
